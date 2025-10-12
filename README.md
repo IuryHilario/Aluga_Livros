@@ -155,13 +155,22 @@ O projeto inclui testes unitários para:
 
 ## Contribuição
 
-Para contribuir com o projeto:
+Contribuições são bem-vindas! Por favor, leia nosso [Guia de Contribuição](CONTRIBUTING.md) para detalhes sobre:
+
+- Como configurar o ambiente de desenvolvimento
+- Padrões de código e boas práticas
+- Como executar testes e verificar qualidade
+- Processo de submissão de Pull Requests
+
+**Resumo rápido:**
 
 1. Faça um fork do repositório
 2. Crie uma branch para sua feature (`git checkout -b feature/nova-funcionalidade`)
-3. Faça commit das suas alterações (`git commit -m 'Adiciona nova funcionalidade'`)
-4. Envie para a branch (`git push origin feature/nova-funcionalidade`)
-5. Abra um Pull Request
+3. Execute os testes: `php artisan test`
+4. Verifique o estilo: `./vendor/bin/pint --test`
+5. Faça commit das suas alterações (`git commit -m 'Adiciona nova funcionalidade'`)
+6. Envie para a branch (`git push origin feature/nova-funcionalidade`)
+7. Abra um Pull Request
 
 ## Licença
 
