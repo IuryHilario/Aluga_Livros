@@ -2,10 +2,10 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -38,30 +38,30 @@ class AppServiceProvider extends ServiceProvider
     private function getAllSettings()
     {
         // Verifica se a tabela existe para evitar erros durante migrações
-        if (!Schema::hasTable('configuracoes')) {
+        if (! Schema::hasTable('configuracoes')) {
             return [];
         }
 
         $settings = DB::table('configuracoes')->get();
-        
+
         // Converte a coleção de objetos em um array associativo
         $settingsArray = [];
-        
+
         foreach ($settings as $setting) {
             // Converte valores booleanos
             if (in_array($setting->chave, [
-                'show_book_covers', 
-                'enable_email_notifications', 
+                'show_book_covers',
+                'enable_email_notifications',
                 'send_overdue_notices',
                 'enable_auto_backup',
-                'allow_renewal_with_pending'
+                'allow_renewal_with_pending',
             ])) {
-                $settingsArray[$setting->chave] = (bool)$setting->valor;
+                $settingsArray[$setting->chave] = (bool) $setting->valor;
             } else {
                 $settingsArray[$setting->chave] = $setting->valor;
             }
         }
-        
+
         return $settingsArray;
     }
 }

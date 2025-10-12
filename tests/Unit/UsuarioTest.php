@@ -4,13 +4,14 @@ namespace Tests\Unit;
 
 use App\Models\Usuario;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class UsuarioTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function pode_inserir_usuario()
     {
         $usuario = Usuario::create([

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('valor')->nullable();
             $table->timestamps();
         });
-        
+
         // Inserir configurações padrão
         $this->seedDefaultSettings();
     }
@@ -29,7 +29,7 @@ return new class extends Migration
     {
         Schema::dropIfExists('configuracoes');
     }
-    
+
     /**
      * Alimenta a tabela com as configurações padrão
      */
@@ -42,13 +42,13 @@ return new class extends Migration
             'contact_phone' => '',
             'show_book_covers' => 1,
             'items_per_page' => 10,
-            
+
             // Empréstimos
             'default_loan_period' => 14,
             'max_loans_per_user' => 3,
             'max_renewals' => 2,
             'allow_renewal_with_pending' => 0,
-            
+
             // Notificações
             'enable_email_notifications' => 0,
             'email_from_name' => 'Aluga Livros',
@@ -56,15 +56,15 @@ return new class extends Migration
             'days_before_due_reminder' => 2,
             'send_overdue_notices' => 1,
             'overdue_notice_frequency' => 3,
-            
+
             // Backup
             'enable_auto_backup' => 0,
             'backup_frequency' => 'weekly',
             'backup_retention' => 5,
         ];
-        
+
         $now = now();
-        
+
         $settings = [];
         foreach ($defaultSettings as $key => $value) {
             $settings[] = [
@@ -74,7 +74,7 @@ return new class extends Migration
                 'updated_at' => $now,
             ];
         }
-        
+
         DB::table('configuracoes')->insert($settings);
     }
 };

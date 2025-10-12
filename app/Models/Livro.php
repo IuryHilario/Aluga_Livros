@@ -11,15 +11,16 @@ class Livro extends Model
     use HasFactory;
 
     protected $table = 'livro';
+
     protected $primaryKey = 'id_livro';
-    
+
     protected $fillable = [
         'titulo',
         'autor',
         'editor',
         'ano_publicacao',
         'capa',
-        'quantidade'
+        'quantidade',
     ];
 
     protected $hidden = ['capa'];
@@ -30,12 +31,12 @@ class Livro extends Model
     {
         return $this->hasMany(Aluguel::class, 'id_livro', 'id_livro');
     }
-    
+
     public function disponivel()
     {
         return $this->quantidade > 0;
     }
-    
+
     public function alugueisAtivos()
     {
         return $this->alugueis()
@@ -45,16 +46,16 @@ class Livro extends Model
 
     public function getHasCapaAttribute()
     {
-        return !empty($this->capa);
+        return ! empty($this->capa);
     }
 
     public function getQuantidadeDisponivelAttribute()
     {
         $alugueisAtivos = $this->alugueisAtivos();
-            
+
         return $this->quantidade - $alugueisAtivos;
     }
-    
+
     public static function getLivrosPopulares($limit = 4)
     {
         return self::select('livro.*', DB::raw('COUNT(aluguel.id_aluguel) as total_alugueis'))

@@ -3,16 +3,17 @@
 namespace Tests\Unit;
 
 use App\Models\Aluguel;
-use App\Models\Usuario;
 use App\Models\Livro;
+use App\Models\Usuario;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class DevolucaoTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function pode_devolver_livro_e_atualizar_status()
     {
         $usuario = Usuario::create([

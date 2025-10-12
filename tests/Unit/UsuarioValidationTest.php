@@ -4,13 +4,14 @@ namespace Tests\Unit;
 
 use App\Models\Usuario;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class UsuarioValidationTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function nao_permite_email_duplicado()
     {
         Usuario::create([
@@ -28,7 +29,7 @@ class UsuarioValidationTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function valida_campos_obrigatorios_usuario()
     {
         $this->expectException(\Illuminate\Database\QueryException::class);

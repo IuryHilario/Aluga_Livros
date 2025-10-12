@@ -2,19 +2,21 @@
 
 namespace App\Notifications;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Notification;
 use App\Models\Aluguel;
 use App\Models\Settings;
 use Carbon\Carbon;
+use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
 
 class AluguelAtrasado extends Notification
 {
     use Queueable;
 
     protected $aluguel;
+
     protected $diasAtraso;
+
     protected $settings;
 
     /**
@@ -43,14 +45,14 @@ class AluguelAtrasado extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         // Certifica que temos as informações necessárias
-        if (!$this->aluguel->relationLoaded('livro')) {
+        if (! $this->aluguel->relationLoaded('livro')) {
             $this->aluguel->load('livro');
         }
-        
+
         $livroTitulo = $this->aluguel->livro->titulo;
         $dataEmprestimo = Carbon::parse($this->aluguel->dt_aluguel)->format('d/m/Y');
         $dataDevolucao = Carbon::parse($this->aluguel->dt_devolucao)->format('d/m/Y');
-        
+
         $systemName = $this->settings['system_name'] ?? 'Aluga Livros';
 
         return (new MailMessage)
@@ -76,7 +78,7 @@ class AluguelAtrasado extends Notification
             'id_aluguel' => $this->aluguel->id_aluguel,
             'livro' => $this->aluguel->livro->titulo,
             'data_devolucao' => $this->aluguel->dt_devolucao,
-            'dias_atraso' => $this->diasAtraso
+            'dias_atraso' => $this->diasAtraso,
         ];
     }
 }

@@ -7,13 +7,18 @@ use Illuminate\View\Component;
 class Actions extends Component
 {
     public $id;
-    public $show;
-    public $edit;
-    public $delete;
-    public $devolver;
-    public $email;
-    public $renovar;
 
+    public $show;
+
+    public $edit;
+
+    public $delete;
+
+    public $devolver;
+
+    public $email;
+
+    public $renovar;
 
     public function __construct($id = null, $show = null, $edit = null, $delete = null, $devolver = null, $email = null, $renovar = null)
     {

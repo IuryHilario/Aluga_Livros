@@ -1,15 +1,15 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AluguelController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LivroController;
-use App\Http\Controllers\AluguelController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
-use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\UsuarioController;
+use Illuminate\Support\Facades\Route;
 
 // Rota inicial redirecionando para o dashboard
 Route::get('/', function () {
@@ -84,7 +84,7 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('settings')->name('settings.')->group(function () {
         Route::get('/', [SettingsController::class, 'index'])->name('index');
         Route::post('/update', [SettingsController::class, 'update'])->name('update');
-        
+
         // Gerenciamento de backups
         Route::get('/backups', [SettingsController::class, 'backups'])->name('backups');
         Route::post('/backup/create', [SettingsController::class, 'createBackup'])->name('backup.create');

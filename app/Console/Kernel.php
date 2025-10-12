@@ -15,7 +15,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         Commands\RunScheduledBackups::class,
     ];
-    
+
     /**
      * Define the application's command schedule.
      */
@@ -23,10 +23,10 @@ class Kernel extends ConsoleKernel
     {
         // Verificação de atrasos
         $schedule->command('check:overdue')->dailyAt('01:00');
-        
+
         // Backup automático
         $schedule->command('backup:run')->dailyAt('03:00');
-        
+
         // Limpeza de registros temporários
     }
 

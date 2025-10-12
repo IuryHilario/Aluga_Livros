@@ -10,13 +10,14 @@ class Renovacao extends Model
     use HasFactory;
 
     protected $table = 'renovacao';
+
     protected $primaryKey = 'id_renovacao';
-    
+
     protected $fillable = [
         'id_aluguel',
         'dt_renovacao',
         'dt_devolucao_nova',
-        'ds_status'
+        'ds_status',
     ];
 
     // Relacionamento com aluguel

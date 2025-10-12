@@ -1,5 +1,11 @@
 # Aluga Livros
 
+[![Laravel](https://img.shields.io/badge/Laravel-12.x-FF2D20?style=flat-square&logo=laravel)](https://laravel.com)
+[![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=flat-square&logo=php)](https://php.net)
+[![License](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square)](LICENSE)
+[![Tests](https://img.shields.io/badge/Tests-Passing-success?style=flat-square)](tests/)
+[![Code Style](https://img.shields.io/badge/Code%20Style-PSR--12-blue?style=flat-square)](https://www.php-fig.org/psr/psr-12/)
+
 ## Descrição do Sistema
 
 O Aluga Livros é uma plataforma web para gerenciamento de aluguel de livros. O sistema permite que usuários consultem o acervo disponível, realizem reservas e aluguéis de livros, além de oferecer funcionalidades de administração para controle do acervo e dos empréstimos.
@@ -106,6 +112,46 @@ O projeto segue a estrutura padrão do Laravel, com os seguintes diretórios pri
 - `public/` - Arquivos públicos acessíveis pela web
 - `resources/` - Assets, views, linguagens
 - `routes/` - Definição de rotas
+- `tests/` - Testes unitários e de integração
+
+## Qualidade de Código
+
+O projeto segue as melhores práticas de desenvolvimento:
+
+### Testes
+
+Execute os testes com:
+
+```bash
+php artisan test
+```
+
+ou com mais detalhes:
+
+```bash
+php artisan test --parallel
+```
+
+### Estilo de Código
+
+O projeto segue o padrão PSR-12. Para verificar o estilo do código:
+
+```bash
+./vendor/bin/pint --test
+```
+
+Para corrigir automaticamente problemas de estilo:
+
+```bash
+./vendor/bin/pint
+```
+
+### Cobertura de Testes
+
+O projeto inclui testes unitários para:
+- Modelos (Livro, Usuario, Aluguel)
+- Validações de dados
+- Regras de negócio (empréstimos, devoluções, renovações)
 
 ## Contribuição
 
