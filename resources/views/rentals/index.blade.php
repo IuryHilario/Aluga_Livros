@@ -208,8 +208,8 @@
                 e.preventDefault();
                 selectedRentalId = btn.getAttribute('data-rental-id');
                 // Buscar o nome do usuário na mesma linha da tabela
-                var userName = btn.closest('tr').querySelector('td:nth-child(2) .user-link').textContent.trim();
-                document.getElementById('modalUserName').textContent = userName;
+                var userName = btn.closest('tr').querySelector('td:nth-child(1) .user-link').textContent;
+                document.getElementById('modalUserName').textContent = userName
                 emailModal.style.display = 'block';
             });
         });
