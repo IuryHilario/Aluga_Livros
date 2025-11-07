@@ -1,0 +1,204 @@
+/* Navbar Custom Styles - Complemento ao Tailwind CSS */
+
+/* Animação suave para dropdowns */
+.dropdown-menu {
+    animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Badge de notificação com pulse */
+.notification-badge {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: .8;
+    }
+}
+
+/* Scrollbar customizada para menus dropdown */
+[x-show] .overflow-y-auto::-webkit-scrollbar {
+    width: 6px;
+}
+
+[x-show] .overflow-y-auto::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 3px;
+}
+
+[x-show] .overflow-y-auto::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+
+[x-show] .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* Hover effect suave para itens de notificação */
+.notification-item-hover {
+    position: relative;
+    overflow: hidden;
+}
+
+.notification-item-hover::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 3px;
+    background: linear-gradient(to bottom, #f59e0b, #d97706);
+    transform: translateX(-100%);
+    transition: transform 0.2s ease;
+}
+
+.notification-item-hover:hover::before {
+    transform: translateX(0);
+}
+
+/* Mobile search bar animation */
+#mobile-search-bar {
+    animation: slideDown 0.3s ease-out;
+}
+
+/* Search results hover effect */
+.search-result-item {
+    transition: all 0.2s ease;
+}
+
+.search-result-item:hover {
+    transform: translateX(4px);
+}
+
+/* Avatar ring effect */
+.avatar-ring {
+    box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.2);
+    transition: box-shadow 0.3s ease;
+}
+
+.avatar-ring:hover {
+    box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.3);
+}
+
+/* Responsividade para textos */
+@media (max-width: 640px) {
+    /* Esconder textos menos importantes em mobile */
+    .hide-on-mobile {
+        display: none;
+    }
+
+    /* Ajustar tamanho dos ícones em mobile */
+    .mobile-icon-size {
+        font-size: 1.125rem;
+    }
+}
+
+/* Sticky navbar shadow on scroll */
+.navbar-scrolled {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Loading state para search */
+.search-loading {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Backdrop blur para dropdowns */
+@supports (backdrop-filter: blur(10px)) {
+    .dropdown-backdrop {
+        backdrop-filter: blur(10px);
+        background-color: rgba(255, 255, 255, 0.95);
+    }
+}
+
+/* Focus visible para acessibilidade */
+button:focus-visible,
+a:focus-visible {
+    outline: 2px solid #f59e0b;
+    outline-offset: 2px;
+}
+
+/* Transição suave para todos os elementos interativos */
+button,
+a {
+    transition: all 0.2s ease-in-out;
+}
+
+/* Badge count animation */
+@keyframes badgeAppear {
+    from {
+        transform: scale(0);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+.badge-appear {
+    animation: badgeAppear 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* User menu item hover effect */
+.user-menu-item {
+    position: relative;
+}
+
+.user-menu-item::after {
+    content: '';
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #e5e7eb, transparent);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.user-menu-item:hover::after {
+    opacity: 1;
+}
+
+/* Breadcrumb responsive */
+@media (max-width: 640px) {
+    .breadcrumb-item {
+        font-size: 0.875rem;
+    }
+}
+
+/* Z-index hierarchy */
+.z-navbar {
+    z-index: 20;
+}
+
+.z-dropdown {
+    z-index: 50;
+}
+
+.z-overlay {
+    z-index: 30;
+}

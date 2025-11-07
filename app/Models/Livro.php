@@ -12,7 +12,7 @@ class Livro extends Model
 
     protected $table = 'livro';
     protected $primaryKey = 'id_livro';
-    
+
     protected $fillable = [
         'titulo',
         'autor',
@@ -30,12 +30,12 @@ class Livro extends Model
     {
         return $this->hasMany(Aluguel::class, 'id_livro', 'id_livro');
     }
-    
+
     public function disponivel()
     {
         return $this->quantidade > 0;
     }
-    
+
     public function alugueisAtivos()
     {
         return $this->alugueis()
@@ -51,15 +51,36 @@ class Livro extends Model
     public function getQuantidadeDisponivelAttribute()
     {
         $alugueisAtivos = $this->alugueisAtivos();
-            
+
         return $this->quantidade - $alugueisAtivos;
     }
-    
+
     public static function getLivrosPopulares($limit = 4)
     {
-        return self::select('livro.*', DB::raw('COUNT(aluguel.id_aluguel) as total_alugueis'))
+        return self::select(
+                'livro.id_livro',
+                'livro.titulo',
+                'livro.autor',
+                'livro.editor',
+                'livro.ano_publicacao',
+                'livro.capa',
+                'livro.quantidade',
+                'livro.created_at',
+                'livro.updated_at',
+                DB::raw('COUNT(aluguel.id_aluguel) as total_alugueis')
+            )
             ->leftJoin('aluguel', 'livro.id_livro', '=', 'aluguel.id_livro')
-            ->groupBy('livro.id_livro', 'livro.titulo', 'livro.autor', 'livro.editor', 'livro.ano_publicacao', 'livro.capa', 'livro.quantidade', 'livro.created_at', 'livro.updated_at')
+            ->groupBy(
+                'livro.id_livro',
+                'livro.titulo',
+                'livro.autor',
+                'livro.editor',
+                'livro.ano_publicacao',
+                'livro.capa',
+                'livro.quantidade',
+                'livro.created_at',
+                'livro.updated_at'
+            )
             ->orderBy('total_alugueis', 'desc')
             ->limit($limit)
             ->get();

@@ -9,87 +9,101 @@
 @endsection
 
 @section('content')
-<div class="panel">
-    <div class="panel-header">
-        <h3><i class="fas fa-users"></i> Lista de Usuários</h3>
-        <div class="panel-actions">
-            <button class="btn-icon" id="toggleFilter"><i class="fas fa-filter"></i></button>
-            <a href="{{ route('users.create') }}" class="btn btn-primary">
-                <i class="fas fa-user-plus"></i> Novo Usuário
+<div class="bg-white rounded-lg shadow-md overflow-hidden">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-amber-50 to-amber-100 px-4 sm:px-6 lg:px-8 py-6 border-b border-amber-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+            <h3 class="text-lg sm:text-xl font-bold text-gray-900 flex items-center gap-2">
+                <i class="fas fa-users text-amber-600"></i> Lista de Usuários
+            </h3>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+            <button class="inline-flex items-center justify-center px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors duration-200" id="toggleFilter">
+                <i class="fas fa-filter mr-2"></i> Filtro
+            </button>
+            <a href="{{ route('users.create') }}" class="inline-flex items-center justify-center px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors duration-200">
+                <i class="fas fa-user-plus mr-2"></i> Novo Usuário
             </a>
         </div>
     </div>
-    <div class="panel-body">
+
+    <!-- Body -->
+    <div class="p-4 sm:p-6 lg:p-8">
         @if(session('success'))
-            <div class="alert alert-success">
-                <i class="fas fa-check-circle"></i> {{ session('success') }}
+            <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-start gap-3">
+                <i class="fas fa-check-circle text-green-600 mt-0.5"></i>
+                <p class="text-green-800">{{ session('success') }}</p>
             </div>
         @endif
 
-        <div class="filter-container" style="{{ (request('search') || request('order_by') || request('order_dir')) ? 'display: block;' : 'display: none;' }}">
-            <form action="{{ route('users.index') }}" method="GET" class="filter-form">
-                <div class="filter-row">
-                    <div class="filter-column">
-                        <label for="search">Pesquisar</label>
-                        <input type="text" id="search" name="search" value="{{ request('search') }}" class="form-control" placeholder="Nome, email ou telefone" autocomplete="off">
+        <!-- Filter Section -->
+        <div class="filter-container mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200" style="{{ (request('search') || request('order_by') || request('order_dir')) ? 'display: block;' : 'display: none;' }}">
+            <form action="{{ route('users.index') }}" method="GET" class="space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div>
+                        <label for="search" class="block text-sm font-semibold text-gray-700 mb-2">Pesquisar</label>
+                        <input type="text" id="search" name="search" value="{{ request('search') }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none" placeholder="Nome, email ou telefone" autocomplete="off">
                     </div>
-                    <div class="filter-column">
-                        <label for="order_by">Ordenar por</label>
-                        <select id="order_by" name="order_by" class="form-control">
+                    <div>
+                        <label for="order_by" class="block text-sm font-semibold text-gray-700 mb-2">Ordenar por</label>
+                        <select id="order_by" name="order_by" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none">
                             <option value="nome" {{ request('order_by') == 'nome' || !request('order_by') ? 'selected' : '' }}>Nome</option>
                             <option value="email" {{ request('order_by') == 'email' ? 'selected' : '' }}>Email</option>
                             <option value="created_at" {{ request('order_by') == 'created_at' ? 'selected' : '' }}>Data de cadastro</option>
                         </select>
                     </div>
-                    <div class="filter-column">
-                        <label for="order_dir">Direção</label>
-                        <select id="order_dir" name="order_dir" class="form-control">
+                    <div>
+                        <label for="order_dir" class="block text-sm font-semibold text-gray-700 mb-2">Direção</label>
+                        <select id="order_dir" name="order_dir" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none">
                             <option value="asc" {{ request('order_dir') == 'asc' || !request('order_dir') ? 'selected' : '' }}>Crescente</option>
                             <option value="desc" {{ request('order_dir') == 'desc' ? 'selected' : '' }}>Decrescente</option>
                         </select>
                     </div>
-                    <div class="filter-actions">
-                        <button type="submit" class="btn btn-primary">Filtrar</button>
-                        <a href="{{ route('users.index') }}" class="btn btn-secondary">Limpar</a>
+                    <div class="flex flex-col justify-end gap-2">
+                        <button type="submit" class="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors duration-200">
+                            Filtrar
+                        </button>
+                        <a href="{{ route('users.index') }}" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors duration-200 text-center">Limpar</a>
                     </div>
                 </div>
             </form>
         </div>
 
         @if(request('search'))
-            <div class="filter-active">
-                <p>
-                    <span class="filter-tag">
-                        <i class="fas fa-search"></i> Buscando: <strong>{{ request('search') }}</strong>
-                    </span>
-                </p>
+            <div class="mb-6 flex items-center gap-2">
+                <span class="inline-flex items-center gap-2 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
+                    <i class="fas fa-search"></i> Buscando: <strong>{{ request('search') }}</strong>
+                </span>
             </div>
         @endif
 
-        <div class="table-responsive">
-            <table class="users-table">
+        <!-- Table -->
+        <div class="overflow-x-auto">
+            <table class="w-full">
                 <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>Email</th>
-                        <th>Telefone</th>
-                        <th>Cadastrado em</th>
-                        <th>Ações</th>
+                    <tr class="bg-gray-100 border-b-2 border-gray-300">
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Nome</th>
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700 hidden sm:table-cell">Email</th>
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700 hidden md:table-cell">Telefone</th>
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700 hidden lg:table-cell">Cadastrado em</th>
+                        <th class="px-4 py-3 text-center text-sm font-semibold text-gray-700">Ações</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="divide-y divide-gray-200">
                     @forelse($usuarios as $usuario)
-                        <tr>
-                            <td>
-                                <div class="user-info-cell">
-                                    <span class="user-avatar-small">{{ strtoupper(substr($usuario->nome, 0, 1)) }}</span>
-                                    <span>{{ $usuario->nome }}</span>
+                        <tr class="hover:bg-gray-50 transition-colors duration-200">
+                            <td class="px-4 py-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="flex-shrink-0 h-10 w-10 flex items-center justify-center rounded-full bg-amber-100 text-amber-700 font-semibold text-sm">
+                                        {{ strtoupper(substr($usuario->nome, 0, 1)) }}
+                                    </div>
+                                    <span class="text-sm font-medium text-gray-900">{{ $usuario->nome }}</span>
                                 </div>
                             </td>
-                            <td>{{ $usuario->email }}</td>
-                            <td>{{ $usuario->telefone ?? 'Não informado' }}</td>
-                            <td>{{ $usuario->created_at ? $usuario->created_at->format('d/m/Y') : 'N/A' }}</td>
-                            <td class="actions">
+                            <td class="px-4 py-4 text-sm text-gray-600 hidden sm:table-cell">{{ $usuario->email }}</td>
+                            <td class="px-4 py-4 text-sm text-gray-600 hidden md:table-cell">{{ $usuario->telefone ?? 'Não informado' }}</td>
+                            <td class="px-4 py-4 text-sm text-gray-600 hidden lg:table-cell">{{ $usuario->created_at ? $usuario->created_at->format('d/m/Y') : 'N/A' }}</td>
+                            <td class="px-4 py-4 text-center">
                                 <x-form.actions
                                     show="{{ route('users.show', $usuario->id_usuario) }}"
                                     edit="{{ route('users.edit', $usuario->id_usuario) }}"
@@ -99,17 +113,19 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="empty-state">
-                                <div class="empty-icon">
-                                    <i class="fas fa-users"></i>
+                            <td colspan="5" class="px-4 py-12">
+                                <div class="flex flex-col items-center justify-center">
+                                    <div class="text-5xl text-gray-300 mb-4">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                    <h4 class="text-lg font-semibold text-gray-700 mb-2">Nenhum usuário encontrado</h4>
+                                    <p class="text-gray-600 mb-4">Não existem usuários cadastrados com os critérios especificados.</p>
+                                    @if(request('search') || request('order_by') || request('order_dir'))
+                                        <a href="{{ route('users.index') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors duration-200">
+                                            <i class="fas fa-undo"></i> Limpar Filtros
+                                        </a>
+                                    @endif
                                 </div>
-                                <h4>Nenhum usuário encontrado</h4>
-                                <p>Não existem usuários cadastrados com os critérios especificados.</p>
-                                @if(request('search') || request('order_by') || request('order_dir'))
-                                    <a href="{{ route('users.index') }}" class="btn btn-secondary">
-                                        <i class="fas fa-undo"></i> Limpar Filtros
-                                    </a>
-                                @endif
                             </td>
                         </tr>
                     @endforelse
@@ -118,17 +134,13 @@
         </div>
 
         @if($usuarios->count() > 0)
-            <div class="pagination-container">
+            <div class="mt-6">
                 {{ $usuarios->appends(request()->query())->links('components.pagination') }}
             </div>
         @endif
     </div>
 </div>
 @endsection
-
-@push('styles')
-    @vite(['resources/css/usuario/usuario.css'])
-@endpush
 
 @push('scripts')
 <script>
