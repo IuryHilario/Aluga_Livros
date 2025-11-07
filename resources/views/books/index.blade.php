@@ -12,20 +12,12 @@
 <!-- Main Card -->
 <div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
     <!-- Header -->
-    <div class="border-b border-gray-200 px-4 sm:px-6 lg:px-8 py-4 sm:py-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-            <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Livros Disponíveis</h3>
-            <p class="text-sm text-gray-600 mt-1">{{ count($livros) }} livro(s) no total</p>
-        </div>
-        <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
-            <button id="toggleFilter" class="inline-flex items-center justify-center rounded-lg px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors duration-200">
-                <i class="fas fa-filter mr-2"></i> Filtrar
-            </button>
-            <a href="{{ route('books.create') }}" class="inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium text-white bg-amber-600 hover:bg-amber-700 transition-colors duration-200">
-                <i class="fas fa-plus mr-2"></i> Adicionar Livro
-            </a>
-        </div>
-    </div>
+    <x-ui.header
+        title="Lista de Livros"
+        icon="fas fa-book"
+        name="Novo Livro"
+        :route="route('books.create')"
+    />
 
     <!-- Filter Section -->
     <div id="filter-container" class="border-b border-gray-200 px-4 sm:px-6 lg:px-8 py-4 sm:py-6 hidden">
