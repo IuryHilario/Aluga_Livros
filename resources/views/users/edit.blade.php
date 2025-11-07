@@ -9,20 +9,28 @@
 @endsection
 
 @section('content')
-<div class="panel">
-    <div class="panel-header">
-        <h3>Editar Informações do Usuário</h3>
+<div class="bg-white rounded-lg shadow-md overflow-hidden">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-amber-50 to-amber-100 px-4 sm:px-6 lg:px-8 py-6 border-b border-amber-200">
+        <h3 class="text-lg sm:text-xl font-bold text-gray-900">Editar Informações do Usuário</h3>
     </div>
-    <div class="panel-body">
+
+    <!-- Body -->
+    <div class="p-4 sm:p-6 lg:p-8 max-w-2xl">
         @if(session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
+            <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-start gap-3">
+                <i class="fas fa-check-circle text-green-600 mt-0.5"></i>
+                <p class="text-green-800">{{ session('success') }}</p>
             </div>
         @endif
 
         @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
+            <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <div class="flex items-start gap-3 mb-2">
+                    <i class="fas fa-exclamation-circle text-red-600 mt-0.5"></i>
+                    <h4 class="font-semibold text-red-800">Erros encontrados:</h4>
+                </div>
+                <ul class="list-disc list-inside text-red-700 text-sm ml-6">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach
@@ -30,7 +38,7 @@
             </div>
         @endif
 
-        <form action="{{ route('users.update', $usuario->id_usuario) }}" method="POST" class="form-usuario">
+        <form action="{{ route('users.update', $usuario->id_usuario) }}" method="POST" class="form-usuario space-y-4">
             @csrf
             @method('PUT')
 
@@ -73,20 +81,18 @@
                 required
             />
 
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save"></i> Atualizar
+            <div class="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-200">
+                <button type="submit" class="inline-flex items-center justify-center px-6 py-3 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors duration-200 font-medium">
+                    <i class="fas fa-save mr-2"></i> Atualizar
                 </button>
-                <a href="{{ route('users.index', $usuario->id_usuario) }}" class="btn btn-secondary">
-                    <i class="fas fa-times"></i> Cancelar
+                <a href="{{ route('users.index', $usuario->id_usuario) }}" class="inline-flex items-center justify-center px-6 py-3 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors duration-200 font-medium">
+                    <i class="fas fa-times mr-2"></i> Cancelar
                 </a>
             </div>
         </form>
     </div>
 </div>
 @endsection
-
-
 
 @push('scripts')
 <script>

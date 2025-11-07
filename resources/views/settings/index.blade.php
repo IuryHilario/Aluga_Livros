@@ -4,79 +4,133 @@
 
 @section('page-title', 'Configurações')
 
-@vite(['resources/css/settings/settings.css'])
-
 @section('breadcrumb')
 <span>Configurações</span>
 @endsection
 
 @section('content')
-<div class="panel">
-    <div class="panel-header">
-        <h3>Configurações do Sistema</h3>
+<div class="max-w-7xl mx-auto">
+    <!-- Header Section -->
+    <div class="mb-8">
+        <h2 class="text-3xl font-bold text-gray-900 mb-2">
+            <i class="fas fa-cog text-amber-600 mr-3"></i>Configurações do Sistema
+        </h2>
+        <p class="text-gray-600">Gerencie as configurações e preferências do seu sistema de biblioteca</p>
     </div>
-    <div class="panel-body">
-        @if(session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
 
-        <div class="settings-tabs">
-            <button class="tab-button active" data-tab="general">Geral</button>
-            <button class="tab-button" data-tab="loans">Empréstimos</button>
-            <button class="tab-button" data-tab="notifications">Notificações</button>
-            <button class="tab-button" data-tab="backup">Backup</button>
+    <!-- Success Alert -->
+    @if(session('success'))
+        <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-start gap-3 animate-pulse">
+            <i class="fas fa-check-circle text-green-600 mt-0.5"></i>
+            <div>
+                <h3 class="font-semibold text-green-800">Sucesso!</h3>
+                <p class="text-green-700 text-sm">{{ session('success') }}</p>
+            </div>
+        </div>
+    @endif
+
+    <!-- Tabs Navigation -->
+    <div class="mb-6 border-b border-gray-200 flex flex-wrap gap-2 bg-white rounded-t-lg p-4 sm:p-6">
+        <button class="tab-button active px-4 sm:px-6 py-3 font-medium text-gray-700 border-b-2 border-amber-600 text-amber-600 transition-all duration-200 hover:text-amber-700" data-tab="general">
+            <i class="fas fa-sliders-h mr-2"></i><span class="hidden sm:inline">Geral</span>
+        </button>
+        <button class="tab-button px-4 sm:px-6 py-3 font-medium text-gray-600 border-b-2 border-transparent hover:text-gray-700 transition-all duration-200" data-tab="loans">
+            <i class="fas fa-handshake mr-2"></i><span class="hidden sm:inline">Empréstimos</span>
+        </button>
+        <button class="tab-button px-4 sm:px-6 py-3 font-medium text-gray-600 border-b-2 border-transparent hover:text-gray-700 transition-all duration-200" data-tab="notifications">
+            <i class="fas fa-bell mr-2"></i><span class="hidden sm:inline">Notificações</span>
+        </button>
+        <button class="tab-button px-4 sm:px-6 py-3 font-medium text-gray-600 border-b-2 border-transparent hover:text-gray-700 transition-all duration-200" data-tab="backup">
+            <i class="fas fa-database mr-2"></i><span class="hidden sm:inline">Backup</span>
+        </button>
+    </div>
+
+    <!-- Form Content -->
+    <form action="{{ route('settings.update') }}" method="POST" class="space-y-0">
+        @csrf
+
+        <!-- GENERAL SETTINGS TAB -->
+        <div class="tab-content active bg-white rounded-b-lg p-6 sm:p-8 shadow-md" id="general-content">
+            <!-- Informações da Biblioteca -->
+            <div class="mb-8">
+                <div class="flex items-center gap-3 mb-6 pb-4 border-b border-gray-200">
+                    <div class="bg-amber-100 rounded-lg p-3">
+                        <i class="fas fa-building text-amber-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900">Informações da Biblioteca</h3>
+                        <p class="text-sm text-gray-600">Detalhes principais do seu sistema</p>
+                    </div>
+                </div>
+
+                <x-form.input
+                    label="Nome da Biblioteca"
+                    placeholder="Digite o nome da biblioteca"
+                    type="text"
+                    name="settings[system_name]"
+                    id="system_name"
+                    value="{{ $settings['system_name'] ?? 'Aluga Livros' }}"
+                    required
+                />
+            </div>
+
+            <!-- Interface de Usuário -->
+            <div>
+                <div class="flex items-center gap-3 mb-6 pb-4 border-b border-gray-200">
+                    <div class="bg-blue-100 rounded-lg p-3">
+                        <i class="fas fa-palette text-blue-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900">Interface de Usuário</h3>
+                        <p class="text-sm text-gray-600">Personalize a experiência visual</p>
+                    </div>
+                </div>
+
+                <!-- Checkbox: Show Book Covers -->
+                <div class="mb-6 flex items-center p-4 bg-gray-50 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors duration-200">
+                    <input type="hidden" name="settings[show_book_covers]" value="0">
+                    <input type="checkbox" id="show_book_covers" name="settings[show_book_covers]" value="1"
+                           class="w-5 h-5 text-amber-600 rounded focus:ring-2 focus:ring-amber-500 cursor-pointer"
+                           {{ isset($settings['show_book_covers']) && $settings['show_book_covers'] ? 'checked' : '' }}>
+                    <label for="show_book_covers" class="ml-3 flex flex-col cursor-pointer">
+                        <span class="font-medium text-gray-900">Mostrar capas dos livros nas listagens</span>
+                        <span class="text-sm text-gray-600">Exibe as capas dos livros em visualizações de lista</span>
+                    </label>
+                </div>
+
+                <!-- Select: Items Per Page -->
+                <div>
+                    <label for="items_per_page" class="block text-sm font-semibold text-gray-700 mb-2">
+                        Itens por página <span class="text-red-500">*</span>
+                    </label>
+                    <select id="items_per_page" name="settings[items_per_page]" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-white text-gray-900 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none transition-all duration-200" required>
+                        <option value="10" {{ ($settings['items_per_page'] ?? 10) == 10 ? 'selected' : '' }}>10 itens</option>
+                        <option value="25" {{ ($settings['items_per_page'] ?? 10) == 25 ? 'selected' : '' }}>25 itens</option>
+                        <option value="50" {{ ($settings['items_per_page'] ?? 10) == 50 ? 'selected' : '' }}>50 itens</option>
+                        <option value="100" {{ ($settings['items_per_page'] ?? 10) == 100 ? 'selected' : '' }}>100 itens</option>
+                    </select>
+                    <p class="mt-2 text-sm text-gray-600">Quantos itens deseja visualizar por página</p>
+                </div>
+            </div>
         </div>
 
-        <form action="{{ route('settings.update') }}" method="POST" class="settings-form">
-            @csrf
-
-            <!-- Configurações Gerais -->
-            <div class="tab-content active" id="general-content">
-                <div class="settings-section">
-                    <h4>Informações da Biblioteca</h4>
-
-                    <x-form.input
-                        label="Nome da Biblioteca"
-                        placeholder="Digite o nome da biblioteca"
-                        type="text"
-                        name="settings[system_name]"
-                        id="system_name"
-                        value="{{ $settings['system_name'] ?? 'Aluga Livros' }}"
-                        required
-                    />
-                </div>
-
-                <div class="settings-section">
-                    <h4>Interface de Usuário</h4>
-
-                    <div class="form-group checkbox-group">
-                        <input type="hidden" name="settings[show_book_covers]" value="0">
-                        <input type="checkbox" id="show_book_covers" name="settings[show_book_covers]" value="1"
-                               {{ isset($settings['show_book_covers']) && $settings['show_book_covers'] ? 'checked' : '' }}>
-                        <label for="show_book_covers">Mostrar capas dos livros nas listagens</label>
+        <!-- LOANS SETTINGS TAB -->
+        <div class="tab-content bg-white rounded-b-lg p-6 sm:p-8 shadow-md" id="loans-content" style="display: none;">
+            <!-- Regras de Empréstimo -->
+            <div class="mb-8">
+                <div class="flex items-center gap-3 mb-6 pb-4 border-b border-gray-200">
+                    <div class="bg-purple-100 rounded-lg p-3">
+                        <i class="fas fa-handshake text-purple-600 text-xl"></i>
                     </div>
-
-                    <div class="form-group">
-                        <label for="items_per_page">Itens por página</label>
-                        <select id="items_per_page" name="settings[items_per_page]" class="form-control">
-                            <option value="10" {{ ($settings['items_per_page'] ?? 10) == 10 ? 'selected' : '' }}>10</option>
-                            <option value="25" {{ ($settings['items_per_page'] ?? 10) == 25 ? 'selected' : '' }}>25</option>
-                            <option value="50" {{ ($settings['items_per_page'] ?? 10) == 50 ? 'selected' : '' }}>50</option>
-                            <option value="100" {{ ($settings['items_per_page'] ?? 10) == 100 ? 'selected' : '' }}>100</option>
-                        </select>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900">Regras de Empréstimo</h3>
+                        <p class="text-sm text-gray-600">Configure os parâmetros de empréstimos</p>
                     </div>
                 </div>
-            </div>
 
-            <!-- Configurações de Empréstimos -->
-            <div class="tab-content" id="loans-content">
-                <div class="settings-section">
-                    <h4>Regras de Empréstimo</h4>
-
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <x-form.input
-                        label="Periodo de Empréstimo (dias)"
+                        label="Período de Empréstimo (dias)"
                         placeholder="Digite o período de empréstimo"
                         type="number"
                         name="settings[loan_period]"
@@ -99,61 +153,106 @@
                         required
                     />
                 </div>
+            </div>
 
-                <div class="settings-section">
-                    <h4>Renovações</h4>
+            <!-- Renovações -->
+            <div>
+                <div class="flex items-center gap-3 mb-6 pb-4 border-b border-gray-200">
+                    <div class="bg-green-100 rounded-lg p-3">
+                        <i class="fas fa-redo text-green-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900">Renovações</h3>
+                        <p class="text-sm text-gray-600">Defina as políticas de renovação</p>
+                    </div>
+                </div>
 
-                    <x-form.input
-                        label="Número Máximo Renovações Permitidas"
-                        placeholder="Digite o número máximo de renovações permitidas"
-                        type="number"
-                        name="settings[max_renewals]"
-                        id="max_renewals"
-                        value="{{ $settings['max_renewals'] ?? 2 }}"
-                        min="0"
-                        max="5"
-                        required
-                    />
+                <x-form.input
+                    label="Número Máximo de Renovações Permitidas"
+                    placeholder="Digite o número máximo de renovações permitidas"
+                    type="number"
+                    name="settings[max_renewals]"
+                    id="max_renewals"
+                    value="{{ $settings['max_renewals'] ?? 2 }}"
+                    min="0"
+                    max="5"
+                    required
+                />
 
-                    <div class="form-group checkbox-group">
-                        <input type="hidden" name="settings[allow_renewal_with_pending]" value="0">
-                        <input type="checkbox" id="allow_renewal_with_pending" name="settings[allow_renewal_with_pending]" value="1"
-                               {{ isset($settings['allow_renewal_with_pending']) && $settings['allow_renewal_with_pending'] ? 'checked' : '' }}>
-                        <label for="allow_renewal_with_pending">Permitir renovações com outras pendências</label>
+                <div class="flex items-center p-4 bg-gray-50 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors duration-200">
+                    <input type="hidden" name="settings[allow_renewal_with_pending]" value="0">
+                    <input type="checkbox" id="allow_renewal_with_pending" name="settings[allow_renewal_with_pending]" value="1"
+                           class="w-5 h-5 text-amber-600 rounded focus:ring-2 focus:ring-amber-500 cursor-pointer"
+                           {{ isset($settings['allow_renewal_with_pending']) && $settings['allow_renewal_with_pending'] ? 'checked' : '' }}>
+                    <label for="allow_renewal_with_pending" class="ml-3 flex flex-col cursor-pointer">
+                        <span class="font-medium text-gray-900">Permitir renovações com outras pendências</span>
+                        <span class="text-sm text-gray-600">Permite renovação mesmo havendo outras pendências</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- NOTIFICATIONS SETTINGS TAB -->
+        <div class="tab-content bg-white rounded-b-lg p-6 sm:p-8 shadow-md" id="notifications-content" style="display: none;">
+            <!-- E-mail Configuration -->
+            <div class="mb-8">
+                <div class="flex items-center gap-3 mb-6 pb-4 border-b border-gray-200">
+                    <div class="bg-indigo-100 rounded-lg p-3">
+                        <i class="fas fa-envelope text-indigo-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900">Configuração de E-mail</h3>
+                        <p class="text-sm text-gray-600">Defina os parâmetros de envio de e-mails</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center p-4 bg-gray-50 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors duration-200 mb-6">
+                    <input type="hidden" name="settings[enable_email_notifications]" value="0">
+                    <input type="checkbox" id="enable_email_notifications" name="settings[enable_email_notifications]" value="1"
+                           class="w-5 h-5 text-amber-600 rounded focus:ring-2 focus:ring-amber-500 cursor-pointer"
+                           {{ isset($settings['enable_email_notifications']) && $settings['enable_email_notifications'] ? 'checked' : '' }}>
+                    <label for="enable_email_notifications" class="ml-3 flex flex-col cursor-pointer">
+                        <span class="font-medium text-gray-900">Ativar notificações por e-mail</span>
+                        <span class="text-sm text-gray-600">Permite o envio de notificações aos usuários</span>
+                    </label>
+                </div>
+
+                <div class="email-notification-settings grid grid-cols-1 md:grid-cols-2 gap-6 p-4 bg-amber-50 border border-amber-200 rounded-lg" id="email-settings" style="{{ isset($settings['enable_email_notifications']) && $settings['enable_email_notifications'] ? '' : 'display: none;' }}">
+                    <div>
+                        <label for="email_from_name" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Nome de Remetente <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" id="email_from_name" name="settings[email_from_name]"
+                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-white text-gray-900 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none transition-all duration-200"
+                               autocomplete="off"
+                               value="{{ $settings['email_from_name'] ?? 'Aluga Livros' }}">
+                    </div>
+
+                    <div>
+                        <label for="email_from_address" class="block text-sm font-semibold text-gray-700 mb-2">
+                            E-mail de Remetente <span class="text-red-500">*</span>
+                        </label>
+                        <input type="email" id="email_from_address" name="settings[email_from_address]"
+                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-white text-gray-900 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none transition-all duration-200"
+                               autocomplete="off"
+                               value="{{ $settings['email_from_address'] ?? 'noreply@alugalivros.com' }}">
                     </div>
                 </div>
             </div>
 
-            <!-- Configurações de Notificações -->
-            <div class="tab-content" id="notifications-content">
-                <div class="settings-section">
-                    <h4>E-mail</h4>
-
-                    <div class="form-group checkbox-group">
-                        <input type="hidden" name="settings[enable_email_notifications]" value="0">
-                        <input type="checkbox" id="enable_email_notifications" name="settings[enable_email_notifications]" value="1"
-                               {{ isset($settings['enable_email_notifications']) && $settings['enable_email_notifications'] ? 'checked' : '' }}>
-                        <label for="enable_email_notifications">Ativar notificações por e-mail</label>
+            <!-- Alerts Configuration -->
+            <div>
+                <div class="flex items-center gap-3 mb-6 pb-4 border-b border-gray-200">
+                    <div class="bg-red-100 rounded-lg p-3">
+                        <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
                     </div>
-
-                    <div class="email-notification-settings" id="email-settings" style="{{ isset($settings['enable_email_notifications']) && $settings['enable_email_notifications'] ? '' : 'display: none;' }}">
-                        <div class="form-group">
-                            <label for="email_from_name">Nome de remetente</label>
-                            <input type="text" id="email_from_name" name="settings[email_from_name]" class="form-control" autocomplete="off"
-                                   value="{{ $settings['email_from_name'] ?? 'Aluga Livros' }}">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="email_from_address">E-mail de remetente</label>
-                            <input type="email" id="email_from_address" name="settings[email_from_address]" class="form-control"   autocomplete="off"
-                                   value="{{ $settings['email_from_address'] ?? 'noreply@alugalivros.com' }}">
-                        </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900">Alertas e Lembretes</h3>
+                        <p class="text-sm text-gray-600">Configure notificações de vencimento e atrasos</p>
                     </div>
                 </div>
 
-                <div class="settings-section">
-                    <h4>Alertas</h4>
-
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                     <x-form.input
                         label="Dias antes do vencimento para enviar lembrete"
                         placeholder="Digite o número de dias"
@@ -166,13 +265,6 @@
                         required
                     />
 
-                    <div class="form-group checkbox-group">
-                        <input type="hidden" name="settings[send_overdue_notices]" value="0">
-                        <input type="checkbox" id="send_overdue_notices" name="settings[send_overdue_notices]" value="1"
-                               {{ isset($settings['send_overdue_notices']) && $settings['send_overdue_notices'] ? 'checked' : '' }}>
-                        <label for="send_overdue_notices">Enviar notificações de atraso</label>
-                    </div>
-
                     <x-form.input
                         label="Frequência de notificações de atraso (dias)"
                         placeholder="Digite a frequência de notificações"
@@ -184,60 +276,107 @@
                         max="7"
                         required
                     />
+                </div>
 
+                <div class="flex items-center p-4 bg-gray-50 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors duration-200">
+                    <input type="hidden" name="settings[send_overdue_notices]" value="0">
+                    <input type="checkbox" id="send_overdue_notices" name="settings[send_overdue_notices]" value="1"
+                           class="w-5 h-5 text-amber-600 rounded focus:ring-2 focus:ring-amber-500 cursor-pointer"
+                           {{ isset($settings['send_overdue_notices']) && $settings['send_overdue_notices'] ? 'checked' : '' }}>
+                    <label for="send_overdue_notices" class="ml-3 flex flex-col cursor-pointer">
+                        <span class="font-medium text-gray-900">Enviar notificações de atraso</span>
+                        <span class="text-sm text-gray-600">Notifica usuários sobre empréstimos atrasados</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- BACKUP SETTINGS TAB -->
+        <div class="tab-content bg-white rounded-b-lg p-6 sm:p-8 shadow-md" id="backup-content" style="display: none;">
+            <!-- Automatic Backup -->
+            <div class="mb-8">
+                <div class="flex items-center gap-3 mb-6 pb-4 border-b border-gray-200">
+                    <div class="bg-cyan-100 rounded-lg p-3">
+                        <i class="fas fa-server text-cyan-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900">Backup Automático</h3>
+                        <p class="text-sm text-gray-600">Configure backups automáticos do sistema</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center p-4 bg-gray-50 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors duration-200 mb-6">
+                    <input type="hidden" name="settings[enable_auto_backup]" value="0">
+                    <input type="checkbox" id="enable_auto_backup" name="settings[enable_auto_backup]" value="1"
+                           class="w-5 h-5 text-amber-600 rounded focus:ring-2 focus:ring-amber-500 cursor-pointer"
+                           {{ isset($settings['enable_auto_backup']) && $settings['enable_auto_backup'] ? 'checked' : '' }}>
+                    <label for="enable_auto_backup" class="ml-3 flex flex-col cursor-pointer">
+                        <span class="font-medium text-gray-900">Ativar backup automático</span>
+                        <span class="text-sm text-gray-600">O sistema criará backups automaticamente</span>
+                    </label>
+                </div>
+
+                <div id="backup-settings" class="p-4 bg-cyan-50 border border-cyan-200 rounded-lg space-y-6" style="{{ isset($settings['enable_auto_backup']) && $settings['enable_auto_backup'] ? '' : 'display: none;' }}">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="backup_frequency" class="block text-sm font-semibold text-gray-700 mb-2">
+                                Frequência de Backup <span class="text-red-500">*</span>
+                            </label>
+                            <select id="backup_frequency" name="settings[backup_frequency]" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-white text-gray-900 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none transition-all duration-200" required>
+                                <option value="daily" {{ ($settings['backup_frequency'] ?? 'weekly') == 'daily' ? 'selected' : '' }}>Diário</option>
+                                <option value="weekly" {{ ($settings['backup_frequency'] ?? 'weekly') == 'weekly' ? 'selected' : '' }}>Semanal</option>
+                                <option value="monthly" {{ ($settings['backup_frequency'] ?? 'weekly') == 'monthly' ? 'selected' : '' }}>Mensal</option>
+                            </select>
+                            <p class="mt-2 text-sm text-gray-600">Com que frequência os backups serão criados</p>
+                        </div>
+
+                        <div>
+                            <label for="backup_retention" class="block text-sm font-semibold text-gray-700 mb-2">
+                                Número de Backups a Manter <span class="text-red-500">*</span>
+                            </label>
+                            <input type="number" id="backup_retention" name="settings[backup_retention]"
+                                   class="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-white text-gray-900 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none transition-all duration-200"
+                                   value="{{ $settings['backup_retention'] ?? 5 }}" min="1" max="30" required>
+                            <p class="mt-2 text-sm text-gray-600">Backups mais antigos serão automaticamente excluídos</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="tab-content" id="backup-content">
-                <div class="settings-section">
-                    <h4>Backup do Sistema</h4>
-
-                    <div class="settings-section" style="margin-bottom: 20px;">
-                        <div class="form-group checkbox-group">
-                            <input type="hidden" name="settings[enable_auto_backup]" value="0">
-                            <input type="checkbox" id="enable_auto_backup" name="settings[enable_auto_backup]" value="1"
-                                   {{ isset(
-                                       $settings['enable_auto_backup']) && $settings['enable_auto_backup'] ? 'checked' : '' }}>
-                            <label for="enable_auto_backup">Ativar backup automático</label>
-                        </div>
-
-                        <div id="backup-settings" style="{{ isset($settings['enable_auto_backup']) && $settings['enable_auto_backup'] ? '' : 'display: none;' }}">
-                            <div class="form-group">
-                                <label for="backup_frequency">Frequência de backup</label>
-                                <select id="backup_frequency" name="settings[backup_frequency]" class="form-control">
-                                    <option value="daily" {{ ($settings['backup_frequency'] ?? 'weekly') == 'daily' ? 'selected' : '' }}>Diário</option>
-                                    <option value="weekly" {{ ($settings['backup_frequency'] ?? 'weekly') == 'weekly' ? 'selected' : '' }}>Semanal</option>
-                                    <option value="monthly" {{ ($settings['backup_frequency'] ?? 'weekly') == 'monthly' ? 'selected' : '' }}>Mensal</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="backup_retention">Número de backups a manter</label>
-                                <input type="number" id="backup_retention" name="settings[backup_retention]" class="form-control"
-                                       value="{{ $settings['backup_retention'] ?? 5 }}" min="1" max="30">
-                                <small class="form-text text-muted">Backups mais antigos serão automaticamente excluídos quando novos forem criados.</small>
-                            </div>
-                        </div>
+            <!-- Manual Backup Actions -->
+            <div>
+                <div class="flex items-center gap-3 mb-6 pb-4 border-b border-gray-200">
+                    <div class="bg-teal-100 rounded-lg p-3">
+                        <i class="fas fa-tools text-teal-600 text-xl"></i>
                     </div>
-
-                    <div class="settings-section" style="background: var(--gray-100); border-left: 4px solid var(--primary-color); margin-bottom: 0;">
-                        <h5 style="margin-top:0; color: var(--primary-color); font-size: 17px;">Ações de Backup Manual</h5>
-                        <p style="margin-bottom: 18px; color: var(--text-light);">Você pode criar backups manualmente ou gerenciar os existentes.</p>
-                        <div class="backup-actions">
-                            <a href="{{ route('settings.backups') }}" class="btn btn-backup-dark">
-                                <i class="fas fa-database"></i> Gerenciar Backups
-                            </a>
-                        </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900">Ações de Backup Manual</h3>
+                        <p class="text-sm text-gray-600">Crie ou gerencie backups manualmente</p>
                     </div>
                 </div>
-            </div>
 
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save"></i> Salvar Configurações
-                </button>
+                <div class="p-6 bg-gradient-to-r from-teal-50 to-cyan-50 border-l-4 border-teal-500 rounded-lg">
+                    <p class="text-gray-700 mb-4">Você pode criar backups manualmente ou gerenciar os backups existentes através da página de gerenciamento.</p>
+                    <a href="{{ route('settings.backups') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-lg transition-all duration-200 shadow-md hover:shadow-lg">
+                        <i class="fas fa-database"></i>
+                        Gerenciar Backups
+                    </a>
+                </div>
             </div>
-        </form>
-    </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center sm:justify-start p-6 bg-gray-50 border-t border-gray-200 rounded-b-lg">
+            <button type="submit" class="px-8 py-3 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-lg transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2 order-first sm:order-none">
+                <i class="fas fa-save"></i>
+                Salvar Configurações
+            </button>
+            <a href="{{ route('dashboard') }}" class="px-8 py-3 bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium rounded-lg transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2">
+                <i class="fas fa-arrow-left"></i>
+                Cancelar
+            </a>
+        </div>
+    </form>
 </div>
 @endsection
 
@@ -247,7 +386,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Gerenciamento de abas
+        // Gerenciamento de abas com transição suave
         const tabButtons = document.querySelectorAll('.tab-button');
         const tabContents = document.querySelectorAll('.tab-content');
 
@@ -255,25 +394,38 @@
             button.addEventListener('click', () => {
                 const tabName = button.getAttribute('data-tab');
 
+                // Remove active from all buttons and contents
+                tabButtons.forEach(tab => {
+                    tab.classList.remove('active', 'border-amber-600', 'text-amber-600');
+                    tab.classList.add('border-transparent', 'text-gray-600');
+                });
+                tabContents.forEach(content => {
+                    content.style.display = 'none';
+                    content.classList.remove('active');
+                });
 
-                tabButtons.forEach(tab => tab.classList.remove('active'));
-                tabContents.forEach(content => content.classList.remove('active'));
-
-                button.classList.add('active');
-                document.getElementById(`${tabName}-content`).classList.add('active');
+                // Add active to clicked button and corresponding content
+                button.classList.add('active', 'border-amber-600', 'text-amber-600');
+                button.classList.remove('border-transparent', 'text-gray-600');
+                const contentElement = document.getElementById(`${tabName}-content`);
+                if (contentElement) {
+                    contentElement.style.display = 'block';
+                    contentElement.classList.add('active');
+                }
             });
         });
 
-
+        // Email notifications toggle
         const emailNotificationsCheckbox = document.getElementById('enable_email_notifications');
         const emailSettings = document.getElementById('email-settings');
 
         if (emailNotificationsCheckbox) {
             emailNotificationsCheckbox.addEventListener('change', function() {
-                emailSettings.style.display = this.checked ? 'block' : 'none';
+                emailSettings.style.display = this.checked ? 'grid' : 'none';
             });
         }
 
+        // Auto backup toggle
         const autoBackupCheckbox = document.getElementById('enable_auto_backup');
         const backupSettings = document.getElementById('backup-settings');
 
@@ -282,6 +434,16 @@
                 backupSettings.style.display = this.checked ? 'block' : 'none';
             });
         }
+
+        // Auto-hide success alerts
+        const alerts = document.querySelectorAll('.animate-pulse');
+        alerts.forEach(alert => {
+            setTimeout(() => {
+                alert.style.transition = 'opacity 0.3s ease-out';
+                alert.style.opacity = '0';
+                setTimeout(() => alert.remove(), 300);
+            }, 5000);
+        });
     });
 </script>
 @endpush

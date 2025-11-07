@@ -5,129 +5,185 @@
 @section('page-title', 'Editar Livro')
 
 @section('breadcrumb')
-    <a href="{{ route('books.index') }}">Livros</a> / <span>Editar</span>
+    <a href="{{ route('books.index') }}" class="hover:text-amber-600 transition-colors duration-200">Livros</a> / <span>Editar</span>
 @endsection
 
 @section('content')
-<div class="panel">
-    <div class="panel-header">
-        <h3>Editar: {{ $livro->titulo }}</h3>
+<div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
+    <!-- Header -->
+    <div class="border-b border-gray-200 px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+        <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Editar: {{ $livro->titulo }}</h3>
+        <p class="text-sm text-gray-600 mt-1">Modifique os dados do livro conforme necessário</p>
     </div>
-    <div class="panel-body">
-        <form action="{{ route('books.update', $livro->id_livro) }}" method="POST" enctype="multipart/form-data" class="book-form">
+
+    <!-- Body -->
+    <div class="px-4 sm:px-6 lg:px-8 py-6">
+        <form action="{{ route('books.update', $livro->id_livro) }}" method="POST" enctype="multipart/form-data" class="space-y-6 max-w-2xl">
             @csrf
             @method('PUT')
 
-            <x-form.input
-                label="Título do Livro"
-                placeholder="Digite o título do livro"
-                type="text"
-                name="titulo"
-                id="titulo"
-                value="{{ old('titulo', $livro->titulo) }}"
-                required
-            />
+            <!-- Título -->
+            <div>
+                <label for="titulo" class="block text-sm font-medium text-gray-900 mb-2">
+                    Título do Livro <span class="text-red-600">*</span>
+                </label>
+                <input type="text" id="titulo" name="titulo" placeholder="Digite o título do livro"
+                       value="{{ old('titulo', $livro->titulo) }}"
+                       class="w-full rounded-lg border @error('titulo') border-red-500 @else border-gray-300 @enderror bg-gray-50 px-4 py-2.5 text-sm focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all duration-200"
+                       required>
+                @error('titulo')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
 
-            <x-form.input
-                label="Autor"
-                placeholder="Digite o nome do autor"
-                type="text"
-                name="autor"
-                id="autor"
-                value="{{ old('autor', $livro->autor) }}"
-                required
-            />
+            <!-- Autor -->
+            <div>
+                <label for="autor" class="block text-sm font-medium text-gray-900 mb-2">
+                    Autor <span class="text-red-600">*</span>
+                </label>
+                <input type="text" id="autor" name="autor" placeholder="Digite o nome do autor"
+                       value="{{ old('autor', $livro->autor) }}"
+                       class="w-full rounded-lg border @error('autor') border-red-500 @else border-gray-300 @enderror bg-gray-50 px-4 py-2.5 text-sm focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all duration-200"
+                       required>
+                @error('autor')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
 
-            <x-form.input
-                label="Editor"
-                placeholder="Digite o nome da editora"
-                type="text"
-                name="editor"
-                id="editor"
-                value="{{ old('editor', $livro->editor) }}"
-                required
-            />
+            <!-- Editora -->
+            <div>
+                <label for="editor" class="block text-sm font-medium text-gray-900 mb-2">
+                    Editora <span class="text-red-600">*</span>
+                </label>
+                <input type="text" id="editor" name="editor" placeholder="Digite o nome da editora"
+                       value="{{ old('editor', $livro->editor) }}"
+                       class="w-full rounded-lg border @error('editor') border-red-500 @else border-gray-300 @enderror bg-gray-50 px-4 py-2.5 text-sm focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all duration-200"
+                       required>
+                @error('editor')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
 
-            <x-form.input
-                label="Ano Publicação"
-                placeholder="Digite o ano de publicação"
-                type="number"
-                name="ano_publicacao"
-                id="ano_publicacao"
-                value="{{ old('ano_publicacao', $livro->ano_publicacao) }}"
-                min="1000"
-                max="{{ date('Y') }}"
-                required
-            />
-
-            <x-form.input
-                label="Quantidade de Exemplares"
-                placeholder="Digite a quantidade de exemplares"
-                type="number"
-                name="quantidade"
-                id="quantidade"
-                value="{{ old('quantidade', $livro->quantidade) }}"
-                min="0"
-                required
-            />
-            
-            <div class="form-group">
-                <label for="capa">Capa do Livro</label>
-                <div class="current-cover mb-2">
-                    @if($livro->capa)
-                        <div class="d-flex align-items-center">
-                            <img src="{{ route('books.capa', $livro->id_livro) }}" alt="Capa atual" class="img-thumbnail" style="max-height: 100px;">
-                            <span class="ml-2">Capa atual</span>
-                        </div>
-                    @else
-                        <p>Nenhuma capa disponível</p>
-                    @endif
-                </div>
-                <div class="custom-file">
-                    <input type="file" name="capa" id="capa" class="custom-file-input @error('capa') is-invalid @enderror">
-                    <label class="custom-file-label" for="capa">Escolher nova capa...</label>
-                    @error('capa')
-                        <div class="invalid-feedback">{{ $message }}</div>
+            <!-- Ano de Publicação e Quantidade em Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                    <label for="ano_publicacao" class="block text-sm font-medium text-gray-900 mb-2">
+                        Ano de Publicação <span class="text-red-600">*</span>
+                    </label>
+                    <input type="number" id="ano_publicacao" name="ano_publicacao" placeholder="Ano"
+                           value="{{ old('ano_publicacao', $livro->ano_publicacao) }}" min="1000" max="{{ date('Y') }}"
+                           class="w-full rounded-lg border @error('ano_publicacao') border-red-500 @else border-gray-300 @enderror bg-gray-50 px-4 py-2.5 text-sm focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all duration-200"
+                           required>
+                    @error('ano_publicacao')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
-                <small class="form-text text-muted">Formatos aceitos: JPG, PNG. Tamanho máximo: 2MB</small>
-                <div id="image-preview" class="mt-2 d-none">
-                    <img src="" alt="Preview da nova capa" class="img-thumbnail" style="max-height: 200px;">
+
+                <div>
+                    <label for="quantidade" class="block text-sm font-medium text-gray-900 mb-2">
+                        Quantidade de Exemplares <span class="text-red-600">*</span>
+                    </label>
+                    <input type="number" id="quantidade" name="quantidade" placeholder="Quantidade"
+                           value="{{ old('quantidade', $livro->quantidade) }}" min="0"
+                           class="w-full rounded-lg border @error('quantidade') border-red-500 @else border-gray-300 @enderror bg-gray-50 px-4 py-2.5 text-sm focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all duration-200"
+                           required>
+                    @error('quantidade')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
             </div>
-            
-            <div class="form-actions">
-                <a href="{{ route('books.index') }}" class="btn btn-secondary">Cancelar</a>
-                <button type="submit" class="btn btn-primary">Atualizar Livro</button>
+
+            <!-- Capa do Livro -->
+            <div>
+                <label class="block text-sm font-medium text-gray-900 mb-3">Capa do Livro</label>
+
+                <!-- Current Cover -->
+                @if($livro->capa)
+                    <div class="mb-4 p-4 rounded-lg bg-gray-50 border border-gray-200">
+                        <p class="text-sm font-medium text-gray-700 mb-3">Capa Atual</p>
+                        <div class="flex items-start gap-4">
+                            <img src="{{ route('books.capa', $livro->id_livro) }}" alt="Capa atual"
+                                 class="h-40 w-32 object-cover rounded-lg border border-gray-200">
+                            <div class="flex-1 pt-2">
+                                <p class="text-xs text-gray-600">Substitua por uma nova capa se necessário</p>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+                <!-- Upload Area -->
+                <div class="mt-4 flex flex-col">
+                    <label for="capa" class="relative flex items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-6 py-8 transition-colors duration-200 hover:border-amber-500 hover:bg-amber-50 cursor-pointer">
+                        <div class="text-center">
+                            <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-2"></i>
+                            <p class="text-sm font-medium text-gray-900">Clique para upload de nova capa</p>
+                            <p class="text-xs text-gray-600 mt-1">JPG, PNG até 2MB</p>
+                        </div>
+                        <input type="file" id="capa" name="capa" class="sr-only" accept="image/jpeg,image/png">
+                    </label>
+                </div>
+                @error('capa')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+
+                <!-- Image Preview -->
+                <div id="image-preview" class="mt-4 hidden">
+                    <div class="p-4 rounded-lg bg-gray-50 border border-gray-200">
+                        <p class="text-sm font-medium text-gray-700 mb-3">Nova Capa</p>
+                        <div class="flex items-start gap-4">
+                            <img id="preview-img" src="" alt="Preview" class="h-40 w-32 object-cover rounded-lg border border-gray-200">
+                            <div class="flex-1 pt-2">
+                                <p class="text-xs text-gray-600" id="preview-filename"></p>
+                                <button type="button" id="remove-preview" class="mt-3 text-sm text-red-600 hover:text-red-700 font-medium">
+                                    <i class="fas fa-trash mr-1"></i> Remover
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="flex flex-col sm:flex-row gap-3 pt-4 sm:pt-6 border-t border-gray-200">
+                <a href="{{ route('books.index') }}" class="inline-flex items-center justify-center rounded-lg px-6 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors duration-200">
+                    <i class="fas fa-times mr-2"></i> Cancelar
+                </a>
+                <button type="submit" class="inline-flex items-center justify-center rounded-lg px-6 py-2.5 text-sm font-medium text-white bg-amber-600 hover:bg-amber-700 transition-colors duration-200">
+                    <i class="fas fa-save mr-2"></i> Atualizar Livro
+                </button>
             </div>
         </form>
     </div>
 </div>
-@endsection
 
-@section('scripts')
+@push('scripts')
 <script>
-    // Preview da imagem selecionada
-    document.getElementById('capa').addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        const preview = document.getElementById('image-preview');
-        const previewImg = preview.querySelector('img');
-        const fileLabel = document.querySelector('.custom-file-label');
-        
-        if (file) {
-            fileLabel.textContent = file.name;
-            const reader = new FileReader();
-            
-            reader.onload = function(e) {
-                previewImg.src = e.target.result;
-                preview.classList.remove('d-none');
+    document.addEventListener('DOMContentLoaded', function() {
+        const capaInput = document.getElementById('capa');
+        const imagePreview = document.getElementById('image-preview');
+        const previewImg = document.getElementById('preview-img');
+        const previewFilename = document.getElementById('preview-filename');
+        const removePreview = document.getElementById('remove-preview');
+
+        capaInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImg.src = e.target.result;
+                    previewFilename.textContent = file.name;
+                    imagePreview.classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
             }
-            
-            reader.readAsDataURL(file);
-        } else {
-            fileLabel.textContent = 'Escolher nova capa...';
-            preview.classList.add('d-none');
-        }
+        });
+
+        removePreview.addEventListener('click', function(e) {
+            e.preventDefault();
+            capaInput.value = '';
+            imagePreview.classList.add('hidden');
+        });
     });
 </script>
+@endpush
 @endsection

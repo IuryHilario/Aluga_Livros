@@ -4,171 +4,196 @@
 
 @section('page-title', 'Relatórios')
 
-@vite(['resources/css/reports/reports.css'])
-
 @section('breadcrumb')
 <span>Relatórios</span>
 @endsection
 
 @section('content')
-<div class="dashboard-summary">
-    <div class="summary-cards">
-        <div class="card blue">
-            <div class="card-icon">
+<!-- Summary Cards -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+    <!-- Total Livros -->
+    <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-500 hover:shadow-lg transition-shadow duration-200">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-500 text-sm font-medium">Livros</p>
+                <h3 class="text-3xl font-bold text-gray-900 mt-2">{{ $reportData['totalBooks'] }}</h3>
+            </div>
+            <div class="text-4xl text-blue-500 opacity-20">
                 <i class="fas fa-book"></i>
             </div>
-            <div class="card-data">
-                <h3>{{ $reportData['totalBooks'] }}</h3>
-                <span>Livros</span>
-            </div>
         </div>
+    </div>
 
-        <div class="card purple">
-            <div class="card-icon">
+    <!-- Total Exemplares -->
+    <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-purple-500 hover:shadow-lg transition-shadow duration-200">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-500 text-sm font-medium">Exemplares</p>
+                <h3 class="text-3xl font-bold text-gray-900 mt-2">{{ $reportData['totalCopies'] }}</h3>
+            </div>
+            <div class="text-4xl text-purple-500 opacity-20">
                 <i class="fas fa-copy"></i>
             </div>
-            <div class="card-data">
-                <h3>{{ $reportData['totalCopies'] }}</h3>
-                <span>Exemplares</span>
-            </div>
         </div>
+    </div>
 
-        <div class="card green">
-            <div class="card-icon">
+    <!-- Total Usuários -->
+    <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-500 hover:shadow-lg transition-shadow duration-200">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-500 text-sm font-medium">Usuários</p>
+                <h3 class="text-3xl font-bold text-gray-900 mt-2">{{ $reportData['totalUsers'] }}</h3>
+            </div>
+            <div class="text-4xl text-green-500 opacity-20">
                 <i class="fas fa-users"></i>
             </div>
-            <div class="card-data">
-                <h3>{{ $reportData['totalUsers'] }}</h3>
-                <span>Usuários</span>
-            </div>
         </div>
+    </div>
 
-        <div class="card orange">
-            <div class="card-icon">
+    <!-- Aluguéis Ativos -->
+    <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-orange-500 hover:shadow-lg transition-shadow duration-200">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-500 text-sm font-medium">Aluguéis Ativos</p>
+                <h3 class="text-3xl font-bold text-gray-900 mt-2">{{ $reportData['activeRentals'] }}</h3>
+            </div>
+            <div class="text-4xl text-orange-500 opacity-20">
                 <i class="fas fa-handshake"></i>
             </div>
-            <div class="card-data">
-                <h3>{{ $reportData['activeRentals'] }}</h3>
-                <span>Aluguéis Ativos</span>
-            </div>
         </div>
+    </div>
 
-        <div class="card red">
-            <div class="card-icon">
-                <i class="fas fa-exclamation-triangle"></i>
+    <!-- Atrasos -->
+    <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-red-500 hover:shadow-lg transition-shadow duration-200">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-500 text-sm font-medium">Atrasos</p>
+                <h3 class="text-3xl font-bold text-gray-900 mt-2">{{ $reportData['overdueRentals'] }}</h3>
             </div>
-            <div class="card-data">
-                <h3>{{ $reportData['overdueRentals'] }}</h3>
-                <span>Atrasos</span>
+            <div class="text-4xl text-red-500 opacity-20">
+                <i class="fas fa-exclamation-triangle"></i>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Estatísticas Mensais -->
-<div class="panel">
-    <div class="panel-header">
-        <h3>Estatísticas Mensais (Últimos 6 Meses)</h3>
-        <div class="panel-actions">
-            <a href="{{ route('reports.pdf') }}" class="btn-icon" title="Exportar para PDF">
-                <i class="fas fa-file-pdf"></i>
-            </a>
-        </div>
+<div class="bg-white rounded-lg shadow-md mb-8 overflow-hidden">
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-6 border-b border-gray-200">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4 sm:mb-0">Estatísticas Mensais (Últimos 6 Meses)</h3>
+        <a href="{{ route('reports.pdf') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors duration-200" title="Exportar para PDF">
+            <i class="fas fa-file-pdf"></i>
+            <span class="hidden sm:inline">Exportar PDF</span>
+        </a>
     </div>
-    <div class="panel-body">
-        <div class="monthly-stats">
-            <table class="stats-table">
-                <thead>
-                    <tr>
-                        <th>Mês</th>
-                        <th>Novos Aluguéis</th>
-                        <th>Devoluções</th>
-                        <th>Atrasos</th>
+    <div class="overflow-x-auto">
+        <table class="w-full">
+            <thead class="bg-gray-50 border-b border-gray-200">
+                <tr>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Mês</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Novos Aluguéis</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Devoluções</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Atrasos</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+                @foreach($monthlyStats as $stats)
+                    <tr class="hover:bg-gray-50 transition-colors duration-150">
+                        <td class="px-6 py-4 text-sm text-gray-900">{{ $stats['month'] }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-900">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                                {{ $stats['newRentals'] }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-900">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                                {{ $stats['returnedRentals'] }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-900">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
+                                {{ $stats['overdueCount'] }}
+                            </span>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach($monthlyStats as $stats)
-                        <tr>
-                            <td>{{ $stats['month'] }}</td>
-                            <td>{{ $stats['newRentals'] }}</td>
-                            <td>{{ $stats['returnedRentals'] }}</td>
-                            <td>{{ $stats['overdueCount'] }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
+                @endforeach
+            </tbody>
+        </table>
     </div>
 </div>
 
-<div class="reports-row">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
     <!-- Livros Mais Populares -->
-    <div class="panel half-panel">
-        <div class="panel-header">
-            <h3>Livros Mais Populares</h3>
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="p-6 border-b border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-900">Livros Mais Populares</h3>
         </div>
-        <div class="panel-body">
+        <div class="overflow-x-auto">
             @if(count($topBooks) > 0)
-                <div class="popular-books">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Título</th>
-                                <th>Autor</th>
-                                <th>Aluguéis</th>
+                <table class="w-full">
+                    <thead class="bg-gray-50 border-b border-gray-200">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Título</th>
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Autor</th>
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Aluguéis</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        @foreach($topBooks as $book)
+                            <tr class="hover:bg-gray-50 transition-colors duration-150">
+                                <td class="px-6 py-4 text-sm text-gray-900 font-medium">{{ $book->titulo }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-700">{{ $book->autor }}</td>
+                                <td class="px-6 py-4 text-sm">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800">
+                                        {{ $book->aluguel_count }}
+                                    </span>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($topBooks as $book)
-                                <tr>
-                                    <td>{{ $book->titulo }}</td>
-                                    <td>{{ $book->autor }}</td>
-                                    <td>{{ $book->aluguel_count }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                        @endforeach
+                    </tbody>
+                </table>
             @else
-                <div class="empty-state">
-                    <i class="fas fa-book"></i>
-                    <p>Sem dados de livros para exibir.</p>
+                <div class="p-12 text-center">
+                    <i class="fas fa-book text-5xl text-gray-300 mb-4"></i>
+                    <p class="text-gray-500 mt-2">Sem dados de livros para exibir.</p>
                 </div>
             @endif
         </div>
     </div>
 
     <!-- Usuários Mais Ativos -->
-    <div class="panel half-panel">
-        <div class="panel-header">
-            <h3>Usuários Mais Ativos</h3>
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="p-6 border-b border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-900">Usuários Mais Ativos</h3>
         </div>
-        <div class="panel-body">
+        <div class="overflow-x-auto">
             @if(count($activeUsers) > 0)
-                <div class="active-users">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Nome</th>
-                                <th>Email</th>
-                                <th>Aluguéis</th>
+                <table class="w-full">
+                    <thead class="bg-gray-50 border-b border-gray-200">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Nome</th>
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Email</th>
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Aluguéis</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        @foreach($activeUsers as $user)
+                            <tr class="hover:bg-gray-50 transition-colors duration-150">
+                                <td class="px-6 py-4 text-sm text-gray-900 font-medium">{{ $user->nome }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-700">{{ $user->email }}</td>
+                                <td class="px-6 py-4 text-sm">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-emerald-100 text-emerald-800">
+                                        {{ $user->aluguel_count }}
+                                    </span>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($activeUsers as $user)
-                                <tr>
-                                    <td>{{ $user->nome }}</td>
-                                    <td>{{ $user->email }}</td>
-                                    <td>{{ $user->aluguel_count }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                        @endforeach
+                    </tbody>
+                </table>
             @else
-                <div class="empty-state">
-                    <i class="fas fa-users"></i>
-                    <p>Sem dados de usuários para exibir.</p>
+                <div class="p-12 text-center">
+                    <i class="fas fa-users text-5xl text-gray-300 mb-4"></i>
+                    <p class="text-gray-500 mt-2">Sem dados de usuários para exibir.</p>
                 </div>
             @endif
         </div>
@@ -176,76 +201,90 @@
 </div>
 
 <!-- Aluguéis em Atraso -->
-<div class="panel">
-    <div class="panel-header">
-        <h3>Aluguéis em Atraso</h3>
-        <div class="panel-actions">
-            <button class="btn-icon" id="toggleOverdueFilter" title="Filtrar">
-                <i class="fas fa-filter"></i>
-            </button>
-        </div>
+<div class="bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-6 border-b border-gray-200">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4 sm:mb-0">Aluguéis em Atraso</h3>
+        <button class="inline-flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition-colors duration-200" id="toggleOverdueFilter" title="Filtrar">
+            <i class="fas fa-filter"></i>
+            <span class="hidden sm:inline">Filtrar</span>
+        </button>
     </div>
 
-    <div class="overdue-filter-container" style="display: none;">
-        <form id="overdueFilterForm" class="filter-form">
-            <div class="filter-row">
-                <div class="filter-column">
-                    <label for="start_date">Data Início</label>
-                    <input type="date" id="start_date" name="start_date" class="form-control" value="{{ request('start_date') }}">
+    <!-- Filter Form -->
+    <div id="overdue-filter-container" class="hidden bg-gray-50 p-6 border-b border-gray-200">
+        <form id="overdueFilterForm" class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div>
+                    <label for="start_date" class="block text-sm font-medium text-gray-700 mb-2">Data Início</label>
+                    <input type="date" id="start_date" name="start_date" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200" value="{{ request('start_date') }}">
                 </div>
-                <div class="filter-column">
-                    <label for="end_date">Data Fim</label>
-                    <input type="date" id="end_date" name="end_date" class="form-control" value="{{ request('end_date') }}">
+                <div>
+                    <label for="end_date" class="block text-sm font-medium text-gray-700 mb-2">Data Fim</label>
+                    <input type="date" id="end_date" name="end_date" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200" value="{{ request('end_date') }}">
                 </div>
-                <div class="filter-column">
-                    <label for="min_days">Mínimo de Dias em Atraso</label>
-                    <input type="number" id="min_days" name="min_days" class="form-control" value="{{ request('min_days') }}" min="1">
+                <div>
+                    <label for="min_days" class="block text-sm font-medium text-gray-700 mb-2">Mínimo de Dias</label>
+                    <input type="number" id="min_days" name="min_days" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200" value="{{ request('min_days') }}" min="1">
                 </div>
-                <div class="filter-actions">
-                    <button type="submit" class="btn btn-primary">Filtrar</button>
-                    <button type="button" id="clearFilters" class="btn btn-secondary">Limpar</button>
+                <div class="flex gap-2 items-end">
+                    <button type="submit" class="flex-1 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-medium transition-colors duration-200">
+                        Filtrar
+                    </button>
+                    <button type="button" id="clearFilters" class="flex-1 px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-lg font-medium transition-colors duration-200">
+                        Limpar
+                    </button>
                 </div>
             </div>
-            <div id="filter-loading" class="mt-2" style="display: none;">
-                <i class="fas fa-spinner fa-spin"></i> Carregando...
+            <div id="filter-loading" class="hidden text-center text-amber-600">
+                <i class="fas fa-spinner fa-spin mr-2"></i> Carregando...
             </div>
         </form>
     </div>
 
-    <div class="panel-body" id="overdueRentalsContent">
+    <!-- Rentals Table -->
+    <div class="overflow-x-auto" id="overdueRentalsContent">
         @if(count($overdueRentals) > 0)
-            <div class="overdue-rentals">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Usuário</th>
-                            <th>Livro</th>
-                            <th>Data Devolução</th>
-                            <th>Dias em Atraso</th>
-                            <th>Ações</th>
+            <table class="w-full">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">ID</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Usuário</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Livro</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Data Devolução</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Dias em Atraso</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Ações</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    @foreach($overdueRentals as $rental)
+                        <tr class="hover:bg-gray-50 transition-colors duration-150">
+                            <td class="px-6 py-4 text-sm font-medium text-gray-900">#{{ $rental->id_aluguel }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-900">{{ $rental->usuario->nome }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700">{{ $rental->livro->titulo }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-900">{{ \Carbon\Carbon::parse($rental->dt_devolucao)->format('d/m/Y') }}</td>
+                            <td class="px-6 py-4 text-sm">
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
+                                    {{ $rental->diasAtraso() }} dias
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-sm">
+                                <div class="flex gap-2">
+                                    <a href="{{ route('rentals.show', $rental->id_aluguel) }}" class="inline-flex items-center px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors duration-200" title="Ver Detalhes">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <button class="inline-flex items-center px-3 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition-colors duration-200 notify" data-id="{{ $rental->id_usuario }}" title="Notificar Usuário">
+                                        <i class="fas fa-envelope"></i>
+                                    </button>
+                                </div>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($overdueRentals as $rental)
-                            <tr class="overdue-row">
-                                <td>{{ $rental->usuario->nome }}</td>
-                                <td>{{ $rental->livro->titulo }}</td>
-                                <td>{{ \Carbon\Carbon::parse($rental->dt_devolucao)->format('d/m/Y') }}</td>
-                                <td>{{ $rental->diasAtraso() }} dias</td>
-                                <td class="actions">
-                                    <x-form.actions
-                                        show="{{ route('rentals.show', $rental->id_aluguel) }}"
-                                    />
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+                    @endforeach
+                </tbody>
+            </table>
         @else
-            <div class="empty-state">
-                <i class="fas fa-check-circle"></i>
-                <p>Não há aluguéis em atraso no momento.</p>
+            <div class="p-12 text-center">
+                <i class="fas fa-check-circle text-5xl text-green-300 mb-4"></i>
+                <p class="text-gray-500 text-lg">Não há aluguéis em atraso no momento.</p>
             </div>
         @endif
     </div>
@@ -256,37 +295,42 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Notification buttons functionality
-        const notifyButtons = document.querySelectorAll('.notify');
-        notifyButtons.forEach(button => {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                const userId = this.getAttribute('data-id');
-                alert(`Funcionalidade de notificação para o usuário ID: ${userId} será implementada em breve.`);
-            });
-        });
-
-        // Notify all button
-        const notifyAllBtn = document.getElementById('notifyAllBtn');
-        if (notifyAllBtn) {
-            notifyAllBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                alert('Funcionalidade de notificação para todos os usuários em atraso será implementada em breve.');
+        // Setup notification buttons
+        function setupNotificationButtons() {
+            const notifyButtons = document.querySelectorAll('.notify');
+            notifyButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const userId = this.getAttribute('data-id');
+                    Swal.fire({
+                        title: 'Notificar Usuário',
+                        text: `Enviar notificação para o usuário ID: ${userId}?`,
+                        icon: 'info',
+                        showCancelButton: true,
+                        confirmButtonColor: '#f59e0b',
+                        cancelButtonColor: '#d1d5db',
+                        confirmButtonText: 'Sim, notificar!',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            Swal.fire({
+                                title: 'Sucesso!',
+                                text: 'Usuário notificado com sucesso.',
+                                icon: 'success'
+                            });
+                        }
+                    });
+                });
             });
         }
 
-        // Toggle overdue filter
+        // Toggle filter container
         const toggleOverdueFilter = document.getElementById('toggleOverdueFilter');
-        const overdueFilterContainer = document.querySelector('.overdue-filter-container');
+        const overdueFilterContainer = document.getElementById('overdue-filter-container');
 
-        // Toggle para mostrar/ocultar o filtro
         if (toggleOverdueFilter && overdueFilterContainer) {
             toggleOverdueFilter.addEventListener('click', function() {
-                if (overdueFilterContainer.style.display === 'none' || !overdueFilterContainer.style.display) {
-                    overdueFilterContainer.style.display = 'block';
-                } else {
-                    overdueFilterContainer.style.display = 'none';
-                }
+                overdueFilterContainer.classList.toggle('hidden');
             });
         }
 
@@ -304,13 +348,17 @@
                 const endDate = document.getElementById('end_date').value;
 
                 if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
-                    alert('A data inicial não pode ser maior que a data final');
+                    Swal.fire({
+                        title: 'Erro!',
+                        text: 'A data inicial não pode ser maior que a data final',
+                        icon: 'error'
+                    });
                     return false;
                 }
 
                 // Mostrar indicador de carregamento
                 if (filterLoading) {
-                    filterLoading.style.display = 'block';
+                    filterLoading.classList.remove('hidden');
                 }
 
                 // Montar os parâmetros do filtro
@@ -331,26 +379,23 @@
                         overdueRentalsContent.innerHTML = html;
 
                         // Registrar novamente os listeners para os botões de notificação
-                        const newNotifyButtons = overdueRentalsContent.querySelectorAll('.notify');
-                        newNotifyButtons.forEach(button => {
-                            button.addEventListener('click', function(e) {
-                                e.preventDefault();
-                                const userId = this.getAttribute('data-id');
-                                alert(`Funcionalidade de notificação para o usuário ID: ${userId} será implementada em breve.`);
-                            });
-                        });
+                        setupNotificationButtons();
 
                         // Ocultar indicador de carregamento
                         if (filterLoading) {
-                            filterLoading.style.display = 'none';
+                            filterLoading.classList.add('hidden');
                         }
                     })
                     .catch(error => {
                         console.error('Erro ao filtrar aluguéis em atraso:', error);
                         if (filterLoading) {
-                            filterLoading.style.display = 'none';
+                            filterLoading.classList.add('hidden');
                         }
-                        alert('Ocorreu um erro ao filtrar os aluguéis. Por favor, tente novamente.');
+                        Swal.fire({
+                            title: 'Erro!',
+                            text: 'Ocorreu um erro ao filtrar os aluguéis. Por favor, tente novamente.',
+                            icon: 'error'
+                        });
                     });
             });
 
@@ -368,6 +413,9 @@
                 });
             }
         }
+
+        // Initial setup
+        setupNotificationButtons();
     });
 </script>
 @endpush
