@@ -57,31 +57,8 @@ class Livro extends Model
 
     public static function getLivrosPopulares($limit = 4)
     {
-        return self::select(
-                'livro.id_livro',
-                'livro.titulo',
-                'livro.autor',
-                'livro.editor',
-                'livro.ano_publicacao',
-                'livro.capa',
-                'livro.quantidade',
-                'livro.created_at',
-                'livro.updated_at',
-                DB::raw('COUNT(aluguel.id_aluguel) as total_alugueis')
-            )
-            ->leftJoin('aluguel', 'livro.id_livro', '=', 'aluguel.id_livro')
-            ->groupBy(
-                'livro.id_livro',
-                'livro.titulo',
-                'livro.autor',
-                'livro.editor',
-                'livro.ano_publicacao',
-                'livro.capa',
-                'livro.quantidade',
-                'livro.created_at',
-                'livro.updated_at'
-            )
-            ->orderBy('total_alugueis', 'desc')
+        return self::withCount('alugueis')
+            ->orderByDesc('alugueis_count')
             ->limit($limit)
             ->get();
     }
