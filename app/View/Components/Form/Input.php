@@ -6,29 +6,29 @@ use Illuminate\View\Component;
 
 class Input extends Component
 {
-    public $type;
-    public $name;
     public $id;
-    public $label;
-    public $value;
-    public $placeholder;
+    public $name;
+    public $labelNome;
+    public $type;
+    public $placeHolder;
     public $required;
+    public $value;
 
     public function __construct(
-        $name,
-        $type = 'text',
+        $name = null,
         $id = null,
-        $label = null,
+        $labelNome = null,
+        $type = 'text',
+        $placeHolder = null,
         $value = null,
-        $placeholder = '',
-        $required = false
+        $required = false,
     ) {
         $this->name = $name;
-        $this->type = $type;
         $this->id = $id ?? $name;
-        $this->label = $label;
+        $this->labelNome = $labelNome;
+        $this->type = $type;
+        $this->placeHolder = $placeHolder;
         $this->value = $value;
-        $this->placeholder = $placeholder;
         $this->required = $required;
     }
 

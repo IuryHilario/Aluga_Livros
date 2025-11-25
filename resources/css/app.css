@@ -8,3 +8,4 @@
 /* Custom Component Styles */
 @import './components/sidebar-custom.css';
 @import './components/navbar-custom.css';
+@import './global/search.css';

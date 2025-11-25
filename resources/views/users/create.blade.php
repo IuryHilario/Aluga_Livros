@@ -17,70 +17,49 @@
 
         <!-- Body -->
         <div class="p-4 sm:p-6 lg:p-8 max-w-2xl">
-            @if(session('success'))
-                <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-start gap-3">
-                    <i class="fas fa-check-circle text-green-600 mt-0.5"></i>
-                    <p class="text-green-800">{{ session('success') }}</p>
-                </div>
-            @endif
-
-            @if ($errors->any())
-                <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-                    <div class="flex items-start gap-3 mb-2">
-                        <i class="fas fa-exclamation-circle text-red-600 mt-0.5"></i>
-                        <h4 class="font-semibold text-red-800">Erros encontrados:</h4>
-                    </div>
-                    <ul class="list-disc list-inside text-red-700 text-sm ml-6">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
             <form action="{{ route('users.store') }}" method="POST" class="space-y-4">
                 @csrf
 
                 <x-form.input
-                    label="Nome Completo"
-                    placeholder="Digite o nome de usuário"
+                    labelNome="Nome Completo"
                     type="text"
-                    name="nome"
                     id="nome"
+                    name="nome"
+                    placeHolder="Digite o nome do usuário"
                     value="{{ old('nome') }}"
-                    required
+                    :required="true"
                 />
 
                 <x-form.input
-                    label="E-mail"
-                    placeholder="Digite o e-mail"
+                    labelNome="E-mail"
                     type="email"
-                    name="email"
                     id="email"
+                    name="email"
+                    placeHolder="Digite o e-mail"
                     value="{{ old('email') }}"
-                    required
+                    :required="true"
                 />
 
                 <x-form.input
-                    label="Telefone"
-                    placeholder="Digite o telefone"
+                    labelNome="Telefone"
                     type="tel"
-                    name="telefone"
                     id="telefone"
+                    name="telefone"
+                    placeHolder="Digite o telefone"
                     value="{{ old('telefone') }}"
-                    required
+                    :required="true"
                 />
 
                 <x-form.input
-                    label="Máximo de Livros Permitidos"
-                    placeholder="Digite o máximo de livros permitidos"
+                    labelNome="Máximo de Livros Permitidos"
                     type="number"
-                    name="max_emprestimos"
                     id="max_emprestimos"
+                    name="max_emprestimos"
+                    placeHolder="Digite o máximo de livros permitidos"
                     value="{{ old('max_emprestimos', $settings['max_loans_per_user'] ?? 3) }}"
                     min="1"
                     max="{{ $settings['max_loans_per_user'] ?? 3 }}"
-                    required
+                    :required="true"
                 />
 
                 <div class="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-200">

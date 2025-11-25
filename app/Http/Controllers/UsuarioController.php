@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Usuario;
 use Illuminate\Http\Request;
 use App\Models\Settings;
+use App\Http\Requests\UsuarioRequest;
 
 class UsuarioController extends Controller
 {
@@ -13,7 +14,7 @@ class UsuarioController extends Controller
     {
         $query = Usuario::query();
         $settings = Settings::getAllSettings();
-        
+
         if ($request->has('search') && !empty($request->search)) {
             $searchTerm = $request->search;
             $query->where(function($q) use ($searchTerm) {
@@ -22,16 +23,16 @@ class UsuarioController extends Controller
                   ->orWhere('telefone', 'like', '%' . $searchTerm . '%');
             });
         }
-        
+
         $orderBy = $request->order_by ?? 'id_usuario';
         $orderDir = $request->order_dir ?? 'DESC';
-        
+
         $query->orderBy($orderBy, $orderDir);
-        
+
         $usuarios = $query->paginate($settings['items_per_page']);
-        
+
         $usuarios->appends($request->all());
-        
+
         return view('users.index', compact('usuarios'));
     }
 
@@ -41,23 +42,12 @@ class UsuarioController extends Controller
         return view('users.create', compact('settings'));
     }
 
-    public function store(Request $request)
+    public function store(UsuarioRequest $request)
     {
         $settings = Settings::getAllSettings();
         $max_loans = $settings['max_loans_per_user'] ?? 3;
-        
-        $validated = $request->validate([
-            'nome' => 'required|string|max:255',
-            'email' => 'required|email|unique:usuario,email',
-            'telefone' => 'nullable|string|max:20',
-            'max_emprestimos' => 'nullable|integer|min:1|max:' . $max_loans,
-        ], [
-            'nome.required' => 'O nome é obrigatório',
-            'email.required' => 'O e-mail é obrigatório',
-            'email.email' => 'Informe um e-mail válido',
-            'email.unique' => 'Este e-mail já está cadastrado',
-            'max_emprestimos.max' => 'O número máximo de empréstimos não pode exceder ' . $max_loans,
-        ]);
+
+        $validated = $request->validated();
 
         if (!isset($validated['max_emprestimos'])) {
             $validated['max_emprestimos'] = $max_loans;
@@ -83,24 +73,11 @@ class UsuarioController extends Controller
         return view('users.edit', compact('usuario', 'settings'));
     }
 
-    public function update(Request $request, $id)
+    public function update(UsuarioRequest $request, $id)
     {
         $usuario = Usuario::findOrFail($id);
-        $settings = Settings::getAllSettings();
-        $max_loans = $settings['max_loans_per_user'] ?? 3;
-        
-        $validated = $request->validate([
-            'nome' => 'required|string|max:255',
-            'email' => 'required|email|unique:usuario,email,'.$id.',id_usuario',
-            'telefone' => 'nullable|string|max:20',
-            'max_emprestimos' => 'nullable|integer|min:1|max:' . $max_loans,
-        ], [
-            'nome.required' => 'O nome é obrigatório',
-            'email.required' => 'O e-mail é obrigatório',
-            'email.email' => 'Informe um e-mail válido',
-            'email.unique' => 'Este e-mail já está cadastrado',
-            'max_emprestimos.max' => 'O número máximo de empréstimos não pode exceder ' . $max_loans,
-        ]);
+
+        $validated = $request->validated();
 
         $usuario->update($validated);
 

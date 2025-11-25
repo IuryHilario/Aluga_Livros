@@ -9,12 +9,11 @@
 @endsection
 
 @section('content')
-<div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
-    <!-- Header -->
-    <div class="border-b border-gray-200 px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-        <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Formulário de Cadastro</h3>
-        <p class="text-sm text-gray-600 mt-1">Preencha os campos abaixo para adicionar um novo livro</p>
-    </div>
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-amber-50 to-amber-100 px-4 sm:px-6 lg:px-8 py-6 border-b border-amber-200">
+            <h3 class="text-lg sm:text-xl font-bold text-gray-900">Formulário de Cadastro</h3>
+        </div>
 
     <!-- Body -->
     <div class="px-4 sm:px-6 lg:px-8 py-6">
@@ -23,69 +22,66 @@
 
             <!-- Título -->
             <div>
-                <label for="titulo" class="block text-sm font-medium text-gray-900 mb-2">
-                    Título do Livro <span class="text-red-600">*</span>
-                </label>
-                <input type="text" id="titulo" name="titulo" placeholder="Digite o título do livro" value="{{ old('titulo') }}"
-                       class="w-full rounded-lg border @error('titulo') border-red-500 @else border-gray-300 @enderror bg-gray-50 px-4 py-2.5 text-sm focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all duration-200"
-                       required>
-                @error('titulo')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                @enderror
+                <x-form.input
+                    labelNome="Título"
+                    type="text"
+                    id="titulo"
+                    name="titulo"
+                    placeHolder="Digite o título do livro"
+                    value="{{ old('titulo') }}"
+                    :required="true"
+                />
             </div>
 
             <!-- Autor -->
             <div>
-                <label for="autor" class="block text-sm font-medium text-gray-900 mb-2">
-                    Autor <span class="text-red-600">*</span>
-                </label>
-                <input type="text" id="autor" name="autor" placeholder="Digite o nome do autor" value="{{ old('autor') }}"
-                       class="w-full rounded-lg border @error('autor') border-red-500 @else border-gray-300 @enderror bg-gray-50 px-4 py-2.5 text-sm focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all duration-200"
-                       required>
-                @error('autor')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                @enderror
+                <x-form.input
+                    labelNome="Autor"
+                    type="text"
+                    id="autor"
+                    name="autor"
+                    placeHolder="Digite o nome do autor"
+                    value="{{ old('autor') }}"
+                    :required="true"
+                />
             </div>
 
             <!-- Editora -->
             <div>
-                <label for="editor" class="block text-sm font-medium text-gray-900 mb-2">
-                    Editora <span class="text-red-600">*</span>
-                </label>
-                <input type="text" id="editor" name="editor" placeholder="Digite o nome da editora" value="{{ old('editor') }}"
-                       class="w-full rounded-lg border @error('editor') border-red-500 @else border-gray-300 @enderror bg-gray-50 px-4 py-2.5 text-sm focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all duration-200"
-                       required>
-                @error('editor')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                @enderror
+                <x-form.input
+                    labelNome="Editora"
+                    type="text"
+                    id="editor"
+                    name="editor"
+                    placeHolder="Digite o nome da editora"
+                    value="{{ old('editor') }}"
+                    :required="false"
+                />
             </div>
-
             <!-- Ano de Publicação e Quantidade em Grid -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
-                    <label for="ano_publicacao" class="block text-sm font-medium text-gray-900 mb-2">
-                        Ano de Publicação <span class="text-red-600">*</span>
-                    </label>
-                    <input type="number" id="ano_publicacao" name="ano_publicacao" placeholder="Ano"
-                           value="{{ old('ano_publicacao', date('Y')) }}" min="1000" max="{{ date('Y') }}"
-                           class="w-full rounded-lg border @error('ano_publicacao') border-red-500 @else border-gray-300 @enderror bg-gray-50 px-4 py-2.5 text-sm focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all duration-200"
-                           required>
-                    @error('ano_publicacao')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+                    <x-form.input
+                        labelNome="Ano de Publicação"
+                        type="number"
+                        id="ano_publicacao"
+                        name="ano_publicacao"
+                        placeHolder="Ano"
+                        value="{{ old('ano_publicacao', date('Y')) }}"
+                        :required="true"
+                    />
                 </div>
 
                 <div>
-                    <label for="quantidade" class="block text-sm font-medium text-gray-900 mb-2">
-                        Quantidade de Exemplares <span class="text-red-600">*</span>
-                    </label>
-                    <input type="number" id="quantidade" name="quantidade" placeholder="Quantidade"
-                           value="{{ old('quantidade', 1) }}" min="0"
-                           class="w-full rounded-lg border @error('quantidade') border-red-500 @else border-gray-300 @enderror bg-gray-50 px-4 py-2.5 text-sm focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all duration-200"
-                           required>
-                    @error('quantidade')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+                    <x-form.input
+                        labelNome="Quantidade"
+                        type="number"
+                        id="quantidade"
+                        name="quantidade"
+                        placeHolder="Quantidade em estoque"
+                        value="{{ old('quantidade', 1) }}"
+                        :required="true"
+                    />
                 </div>
             </div>
 

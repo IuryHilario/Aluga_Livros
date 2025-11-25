@@ -160,6 +160,4 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     addConnectionIndicator();
-
-    console.log('✓ Sidebar responsiva inicializada');
 });

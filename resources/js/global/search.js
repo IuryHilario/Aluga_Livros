@@ -1,54 +1,99 @@
 // Script para pesquisa global
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('global-search');
+    const mobileSearchInput = document.getElementById('mobile-global-search');
     const searchResultsDropdown = document.getElementById('search-results-dropdown');
+    const mobileSearchResultsDropdown = document.getElementById('mobile-search-results-dropdown');
     const searchResultsContent = document.getElementById('search-results-content');
+    const mobileSearchResultsContent = document.getElementById('mobile-search-results-content');
     let searchTimeout;
 
-    // Verificação de elementos essenciais
+    // Verificação de elementos essenciais (desktop)
     if (!searchInput || !searchResultsDropdown || !searchResultsContent) {
-        console.error('Elementos de pesquisa não encontrados');
+        console.error('Elementos de pesquisa desktop não encontrados');
         return;
     }
 
-    // Detectar quando o usuário digita na pesquisa
-    searchInput.addEventListener('input', function() {
-        clearTimeout(searchTimeout);
-        const query = this.value.trim();
-        
-        if (query.length < 2) {
-            searchResultsDropdown.style.display = 'none';
-            return;
-        }
+    // Função unificada para lidar com input
+    function handleSearchInput(isMobile = false) {
+        return function() {
+            clearTimeout(searchTimeout);
+            const query = this.value.trim();
 
-        // Exibir loading
-        searchResultsDropdown.style.display = 'block';
-        searchResultsContent.innerHTML = `
-            <div class="search-loading">
-                <i class="fas fa-spinner"></i>
-                <p>Buscando resultados...</p>
-            </div>
-        `;
+            // Sincronizar inputs
+            if (isMobile && searchInput) {
+                searchInput.value = this.value;
+            } else if (!isMobile && mobileSearchInput) {
+                mobileSearchInput.value = this.value;
+            }
 
-        // Delay para reduzir o número de requisições
-        searchTimeout = setTimeout(() => {
-            performSearch(query);
-        }, 300);
-    });
+            if (query.length < 2) {
+                searchResultsDropdown.classList.add('hidden');
+                if (mobileSearchResultsDropdown) mobileSearchResultsDropdown.classList.add('hidden');
+                return;
+            }
 
-    // Focar no input mostra os resultados anteriores se existirem
+            // Exibir loading em ambos
+            const loadingHTML = `
+                <div class="flex flex-col items-center justify-center py-8 px-4">
+                    <i class="fas fa-spinner fa-spin text-amber-600 text-2xl mb-3"></i>
+                    <p class="text-sm text-gray-600">Buscando resultados...</p>
+                </div>
+            `;
+
+            searchResultsDropdown.classList.remove('hidden');
+            searchResultsContent.innerHTML = loadingHTML;
+
+            if (mobileSearchResultsDropdown && mobileSearchResultsContent) {
+                mobileSearchResultsDropdown.classList.remove('hidden');
+                mobileSearchResultsContent.innerHTML = loadingHTML;
+            }
+
+            // Delay para reduzir o número de requisições
+            searchTimeout = setTimeout(() => {
+                performSearch(query);
+            }, 300);
+        };
+    }
+
+    // Detectar quando o usuário digita na pesquisa desktop
+    searchInput.addEventListener('input', handleSearchInput(false));
+
+    // Detectar quando o usuário digita na pesquisa mobile
+    if (mobileSearchInput) {
+        mobileSearchInput.addEventListener('input', handleSearchInput(true));
+    }
+
+    // Focar no input desktop mostra os resultados anteriores se existirem
     searchInput.addEventListener('focus', function() {
         const query = this.value.trim();
-        if (query.length >= 2 && searchResultsContent.children.length > 0 && 
-            !searchResultsContent.querySelector('.search-loading')) {
-            searchResultsDropdown.style.display = 'block';
+        if (query.length >= 2 && searchResultsContent.children.length > 0) {
+            searchResultsDropdown.classList.remove('hidden');
         }
     });
+
+    // Focar no input mobile mostra os resultados anteriores se existirem
+    if (mobileSearchInput && mobileSearchResultsDropdown && mobileSearchResultsContent) {
+        mobileSearchInput.addEventListener('focus', function() {
+            const query = this.value.trim();
+            if (query.length >= 2 && mobileSearchResultsContent.children.length > 0) {
+                mobileSearchResultsDropdown.classList.remove('hidden');
+            }
+        });
+    }
 
     // Fechar dropdown quando clicar fora
     document.addEventListener('click', function(e) {
-        if (!searchInput.contains(e.target) && !searchResultsDropdown.contains(e.target)) {
-            searchResultsDropdown.style.display = 'none';
+        const isDesktopSearch = searchInput.contains(e.target) || searchResultsDropdown.contains(e.target);
+        const isMobileSearch = mobileSearchInput && (mobileSearchInput.contains(e.target) ||
+            (mobileSearchResultsDropdown && mobileSearchResultsDropdown.contains(e.target)));
+
+        if (!isDesktopSearch) {
+            searchResultsDropdown.classList.add('hidden');
+        }
+
+        if (mobileSearchResultsDropdown && !isMobileSearch) {
+            mobileSearchResultsDropdown.classList.add('hidden');
         }
     });
 
@@ -72,9 +117,9 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(error => {
                 console.error('Erro na pesquisa:', error);
                 searchResultsContent.innerHTML = `
-                    <div class="search-no-results">
-                        <i class="fas fa-exclamation-circle"></i>
-                        <p>Erro ao realizar a pesquisa. Tente novamente.</p>
+                    <div class="flex flex-col items-center justify-center py-8 px-4 text-center">
+                        <i class="fas fa-exclamation-circle text-red-500 text-3xl mb-3"></i>
+                        <p class="text-sm text-gray-600">Erro ao realizar a pesquisa. Tente novamente.</p>
                     </div>
                 `;
             });
@@ -82,12 +127,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Função para exibir os resultados
     function displayResults(results, query) {
-        if ((!results.livros || !results.livros.length) && 
+        if ((!results.livros || !results.livros.length) &&
             (!results.usuarios || !results.usuarios.length)) {
             searchResultsContent.innerHTML = `
-                <div class="search-no-results">
-                    <i class="fas fa-search"></i>
-                    <p>Nenhum resultado encontrado para "${query}"</p>
+                <div class="flex flex-col items-center justify-center py-8 px-4 text-center">
+                    <i class="fas fa-search text-gray-400 text-3xl mb-3"></i>
+                    <p class="text-sm text-gray-600">Nenhum resultado encontrado para "${query}"</p>
                 </div>
             `;
             return;
@@ -98,16 +143,18 @@ document.addEventListener('DOMContentLoaded', function() {
         // Adiciona resultados de livros
         if (results.livros && results.livros.length > 0) {
             html += `
-                <div class="search-category">
-                    <div class="search-category-title">Livros</div>
+                <div class="mb-2">
+                    <div class="px-4 py-2 bg-gray-50 border-b border-gray-200">
+                        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Livros</h3>
+                    </div>
             `;
 
             results.livros.forEach(livro => {
-                const disponibilidade = livro.disponivel ? 
-                    '<span style="color: green; font-size: 0.9rem;"><i class="fas fa-check-circle"></i> Disponível</span>' : 
-                    '<span style="color: red; font-size: 0.9rem;"><i class="fas fa-times-circle"></i> Indisponível</span>';
+                const disponibilidade = livro.disponivel ?
+                    '<span class="inline-flex items-center gap-1 text-xs text-green-600 font-medium"><i class="fas fa-check-circle"></i> Disponível</span>' :
+                    '<span class="inline-flex items-center gap-1 text-xs text-red-600 font-medium"><i class="fas fa-times-circle"></i> Indisponível</span>';
                 const tituloHighlighted = highlightMatch(livro.titulo, query);
-                // Separar título e subtítulo se houver (exemplo: "Harry Potter e a Pedra Filosofal Vol 7")
+                // Separar título e subtítulo se houver
                 let titulo = tituloHighlighted;
                 let subtitulo = '';
                 if (tituloHighlighted.includes(':')) {
@@ -120,17 +167,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
                 html += `
-                    <div class="search-result-item" data-href="/books/${livro.id}">
-                        <div class="search-result-icon">
-                            <i class="fas fa-book search-book-icon"></i>
+                    <div class="flex items-start gap-3 px-4 py-3 hover:bg-amber-50 cursor-pointer transition-colors duration-200 border-b border-gray-100 last:border-b-0" data-href="/books/${livro.id}">
+                        <div class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-lg bg-amber-100">
+                            <i class="fas fa-book text-amber-600"></i>
                         </div>
-                        <div class="search-result-content">
-                            <div class="search-result-title">
+                        <div class="flex-1 min-w-0">
+                            <div class="font-medium text-gray-900 text-sm mb-1">
                                 <div>${titulo}</div>
-                                ${subtitulo ? `<div style='font-size:0.95em;color:#888;'>${subtitulo}</div>` : ''}
+                                ${subtitulo ? `<div class="text-xs text-gray-500 mt-0.5">${subtitulo}</div>` : ''}
                             </div>
-                            <div style="margin: 4px 0 2px 0;">${disponibilidade}</div>
-                            <div class="search-result-subtitle">Autor: ${livro.autor}</div>
+                            <div class="mb-1">${disponibilidade}</div>
+                            <div class="text-xs text-gray-600">Autor: ${livro.autor}</div>
                         </div>
                     </div>
                 `;
@@ -142,21 +189,23 @@ document.addEventListener('DOMContentLoaded', function() {
         // Adiciona resultados de usuários
         if (results.usuarios && results.usuarios.length > 0) {
             html += `
-                <div class="search-category">
-                    <div class="search-category-title">Usuários</div>
+                <div class="mb-2">
+                    <div class="px-4 py-2 bg-gray-50 border-b border-gray-200">
+                        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Usuários</h3>
+                    </div>
             `;
 
             results.usuarios.forEach(usuario => {
                 const nomeHighlighted = highlightMatch(usuario.nome, query);
-                
+
                 html += `
-                    <div class="search-result-item" data-href="/users/${usuario.id}">
-                        <div class="search-result-icon">
-                            <i class="fas fa-user search-user-icon"></i>
+                    <div class="flex items-start gap-3 px-4 py-3 hover:bg-amber-50 cursor-pointer transition-colors duration-200 border-b border-gray-100 last:border-b-0" data-href="/users/${usuario.id}">
+                        <div class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-lg bg-amber-100">
+                            <i class="fas fa-user text-amber-600"></i>
                         </div>
-                        <div class="search-result-content">
-                            <div class="search-result-title">${nomeHighlighted}</div>
-                            <div class="search-result-subtitle">${usuario.email}</div>
+                        <div class="flex-1 min-w-0">
+                            <div class="font-medium text-gray-900 text-sm mb-1">${nomeHighlighted}</div>
+                            <div class="text-xs text-gray-600 truncate">${usuario.email}</div>
                         </div>
                     </div>
                 `;
@@ -166,9 +215,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         searchResultsContent.innerHTML = html;
-        
+
+        // Atualizar também o mobile se existir
+        if (mobileSearchResultsContent) {
+            mobileSearchResultsContent.innerHTML = html;
+        }
+
         // Adicionar manipuladores de eventos para os itens de resultado
-        document.querySelectorAll('.search-result-item').forEach(item => {
+        document.querySelectorAll('[data-href]').forEach(item => {
             item.addEventListener('click', function() {
                 const href = this.getAttribute('data-href');
                 if (href) {
@@ -183,7 +237,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!query || !text) return text || '';
         try {
             const regex = new RegExp(`(${escapeRegExp(query)})`, 'gi');
-            return text.replace(regex, '<span class="search-highlight">$1</span>');
+            return text.replace(regex, '<span class="bg-amber-200 text-amber-900 px-0.5 rounded">$1</span>');
         } catch (e) {
             console.error('Erro ao destacar texto:', e);
             return text;
