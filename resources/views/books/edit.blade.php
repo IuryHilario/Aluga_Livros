@@ -70,7 +70,7 @@
                         name="ano_publicacao"
                         placeHolder="Ano de Publicação"
                         value="{{ old('ano_publicacao', $livro->ano_publicacao) }}"
-                        :required="false"
+                        :required="true"
                     />
                 </div>
 

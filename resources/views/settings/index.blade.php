@@ -64,14 +64,15 @@
                 </div>
 
                 <x-form.input
-                    label="Nome da Biblioteca"
-                    placeholder="Digite o nome da biblioteca"
+                    labelNome="Nome do Sistema"
+                    placeHolder="Digite o nome do sistema"
                     type="text"
                     name="settings[system_name]"
                     id="system_name"
                     value="{{ $settings['system_name'] ?? 'Aluga Livros' }}"
-                    required
+                    :required="true"
                 />
+
             </div>
 
             <!-- Interface de Usuário -->
@@ -130,27 +131,23 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <x-form.input
-                        label="Período de Empréstimo (dias)"
-                        placeholder="Digite o período de empréstimo"
+                        labelNome="Período de Empréstimo (dias)"
+                        placeHolder="Digite o período de empréstimo"
                         type="number"
                         name="settings[loan_period]"
                         id="loan_period"
                         value="{{ $settings['loan_period'] ?? 14 }}"
-                        min="1"
-                        max="60"
-                        required
+                        :required="true"
                     />
 
                     <x-form.input
-                        label="Máximo Livros por Usuário"
-                        placeholder="Digite o máximo de livros por usuário"
+                        labelNome="Máximo Livros por Usuário"
+                        placeHolder="Digite o máximo de livros por usuário"
                         type="number"
                         name="settings[max_loans_per_user]"
                         id="max_loans_per_user"
                         value="{{ $settings['max_loans_per_user'] ?? 3 }}"
-                        min="1"
-                        max="10"
-                        required
+                        :required="true"
                     />
                 </div>
             </div>
@@ -168,15 +165,13 @@
                 </div>
 
                 <x-form.input
-                    label="Número Máximo de Renovações Permitidas"
-                    placeholder="Digite o número máximo de renovações permitidas"
+                    labelNome="Número Máximo de Renovações Permitidas"
+                    placeHolder="Digite o número máximo de renovações permitidas"
                     type="number"
                     name="settings[max_renewals]"
                     id="max_renewals"
                     value="{{ $settings['max_renewals'] ?? 2 }}"
-                    min="0"
-                    max="5"
-                    required
+                    :required="true"
                 />
 
                 <div class="flex items-center p-4 bg-gray-50 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors duration-200">
@@ -254,27 +249,23 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                     <x-form.input
-                        label="Dias antes do vencimento para enviar lembrete"
-                        placeholder="Digite o número de dias"
+                        labelNome="Dias antes do vencimento para enviar lembrete"
+                        placeHolder="Digite o número de dias"
                         type="number"
                         name="settings[days_before_due_reminder]"
                         id="days_before_due_reminder"
                         value="{{ $settings['days_before_due_reminder'] ?? 2 }}"
-                        min="1"
-                        max="7"
-                        required
+                        :required="true"
                     />
 
                     <x-form.input
-                        label="Frequência de notificações de atraso (dias)"
-                        placeholder="Digite a frequência de notificações"
+                        labelNome="Frequência de notificações de atraso (dias)"
+                        placeHolder="Digite a frequência de notificações"
                         type="number"
                         name="settings[overdue_notice_frequency]"
                         id="overdue_notice_frequency"
                         value="{{ $settings['overdue_notice_frequency'] ?? 3 }}"
-                        min="1"
-                        max="7"
-                        required
+                        :required="true"
                     />
                 </div>
 
